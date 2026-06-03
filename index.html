@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント深掘り v1.1</title>
+<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント深掘り ＋ 視覚フロー図 v1.2</title>
 <meta name="description" content="職員3名の建築設計事務所が明日から使える、生成AI活用の総まとめ。チャプロ社カタログ60項目を業務フロー10カテゴリに再構造化し、ChatGPT/Google Workspace系とClaude Codeデスクトップそれぞれの実装例、初心者〜外注レベルまで段階的に解説。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -890,6 +890,51 @@ button { font-family: inherit; }
   margin: 0;
 }
 
+/* ===== Flow Diagrams（初心者向け視覚補助） ===== */
+.flow-diagram {
+  margin: 18px 0 16px;
+  padding: 18px 16px 12px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+.flow-diagram.in-card {
+  margin: 14px -4px 8px;
+  padding: 14px 10px 8px;
+  background: #fafafa;
+  border-color: #ddd;
+}
+.flow-diagram.standalone {
+  margin: 28px 0 20px;
+  padding: 24px 20px 16px;
+}
+.flow-title {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  background: #228B48;
+  padding: 4px 12px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  margin-bottom: 12px;
+  font-family: var(--font-en);
+}
+.flow-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+}
+.flow-caption {
+  font-size: 12.5px;
+  color: var(--text-mute);
+  margin-top: 10px;
+  text-align: center;
+  line-height: 1.7;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .section { padding: 56px 0; }
@@ -1279,6 +1324,54 @@ button { font-family: inherit; }
             </ul></td></tr>
             <tr><th>注意点</th><td>施主の個人情報を含む議事録は、Google Workspace Business Standard以上の<strong>学習データに使われない法人プラン</strong>を使う。ChatGPT個人版・無料版は不可。</td></tr>
           </table>
+          <div class="flow-diagram standalone" role="figure" aria-labelledby="flow-c4-title">
+            <span class="flow-title" id="flow-c4-title">FLOW 1 / 議事録AI 4ステップ</span>
+            <svg class="flow-svg" viewBox="0 0 880 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="議事録AI 4ステップフロー：録音→文字起こし→AI整形→施主返信。合計15分で2時間打合せの議事録が完成">
+              <text x="440" y="20" text-anchor="middle" font-family="Noto Sans JP,sans-serif" font-size="13" font-weight="700" fill="#0F4A28">2時間の打合せ → 議事録完成まで合計 約15分</text>
+              <!-- STEP 1 -->
+              <rect x="20" y="50" width="180" height="105" rx="6" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="110" y="73" text-anchor="middle" font-size="11" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif" letter-spacing="0.12em">STEP 1</text>
+              <text x="110" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">録音</text>
+              <text x="110" y="118" text-anchor="middle" font-size="11" fill="#555">Plaud Note / ICレコーダー</text>
+              <text x="110" y="135" text-anchor="middle" font-size="11" fill="#555">スマホ録音アプリ</text>
+              <!-- 矢印1 -->
+              <path d="M 205 102 L 232 102" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="232,96 244,102 232,108" fill="#228B48"/>
+              <!-- STEP 2 -->
+              <rect x="245" y="50" width="180" height="105" rx="6" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="335" y="73" text-anchor="middle" font-size="11" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif" letter-spacing="0.12em">STEP 2</text>
+              <text x="335" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">文字起こし</text>
+              <text x="335" y="118" text-anchor="middle" font-size="11" fill="#555">Notta / Whisper</text>
+              <text x="335" y="135" text-anchor="middle" font-size="11" fill="#555">Google Meet字幕</text>
+              <!-- 矢印2 -->
+              <path d="M 430 102 L 457 102" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="457,96 469,102 457,108" fill="#228B48"/>
+              <!-- STEP 3 ★AI -->
+              <rect x="470" y="50" width="180" height="105" rx="6" fill="#E8F5EC" stroke="#1A6D39" stroke-width="2.5"/>
+              <text x="560" y="73" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39" font-family="Helvetica Neue,sans-serif" letter-spacing="0.1em">STEP 3 ★AI</text>
+              <text x="560" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#0F4A28">AI整形</text>
+              <text x="560" y="118" text-anchor="middle" font-size="11" fill="#1A6D39">決定事項・宿題・</text>
+              <text x="560" y="135" text-anchor="middle" font-size="11" fill="#1A6D39">次回アクション抽出</text>
+              <!-- 矢印3 -->
+              <path d="M 655 102 L 682 102" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="682,96 694,102 682,108" fill="#228B48"/>
+              <!-- STEP 4 -->
+              <rect x="695" y="50" width="180" height="105" rx="6" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="785" y="73" text-anchor="middle" font-size="11" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif" letter-spacing="0.12em">STEP 4</text>
+              <text x="785" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#1a1a1a">施主返信</text>
+              <text x="785" y="118" text-anchor="middle" font-size="11" fill="#555">議事録メール送付</text>
+              <text x="785" y="135" text-anchor="middle" font-size="11" fill="#555">タスク管理に登録</text>
+              <!-- 時間バー -->
+              <rect x="20" y="175" width="855" height="48" rx="4" fill="#F7FAF8" stroke="#e5e5e5"/>
+              <text x="38" y="194" font-size="11" font-weight="700" fill="#555">所要時間</text>
+              <text x="110" y="194" text-anchor="middle" font-size="12" font-weight="600" fill="#666">同時進行</text>
+              <text x="335" y="194" text-anchor="middle" font-size="12" font-weight="600" fill="#666">3-5分</text>
+              <text x="560" y="194" text-anchor="middle" font-size="13" font-weight="700" fill="#228B48">★3-5分</text>
+              <text x="785" y="194" text-anchor="middle" font-size="12" font-weight="600" fill="#666">5-7分</text>
+              <text x="447" y="214" text-anchor="middle" font-size="11" fill="#999">従来：2時間打合せ＋議事録作成 6-12時間 → AI導入後：打合せ＋議事録 ＋ 15分（月20時間以上の削減実例あり）</text>
+            </svg>
+            <p class="flow-caption">★ STEP 3 がAIの主戦場。手書きメモを取らずに録音に集中できるため、打合せ自体の質も上がる。</p>
+          </div>
         </div>
       </div>
 
@@ -1976,6 +2069,71 @@ button { font-family: inherit; }
           <li>試行→修正を3〜5回繰り返して安定化</li>
           <li>チームに共有（全員が同コマンドで再現可能）</li>
         </ol>
+        <div class="flow-diagram in-card" role="figure" aria-labelledby="flow-a1-title">
+          <span class="flow-title" id="flow-a1-title">FLOW 2 / Skills自作 5ステップ</span>
+          <svg class="flow-svg" viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Skills自作5ステップ：業務書き出し→Claudeに指示→自動生成→試行3-5回→チーム共有">
+            <!-- 5ステップ円 -->
+            <g font-family="Noto Sans JP,sans-serif">
+              <!-- Step 1 -->
+              <circle cx="90" cy="80" r="40" fill="#fff" stroke="#228B48" stroke-width="2.5"/>
+              <text x="90" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif">1</text>
+              <text x="90" y="96" text-anchor="middle" font-size="10" fill="#1A6D39">人が書く</text>
+              <text x="90" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">業務手順を</text>
+              <text x="90" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">箇条書き</text>
+              <text x="90" y="176" text-anchor="middle" font-size="10" fill="#777">30分</text>
+              <!-- 矢印1 -->
+              <path d="M 135 80 L 165 80" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="165,74 177,80 165,86" fill="#228B48"/>
+              <!-- Step 2 -->
+              <circle cx="222" cy="80" r="40" fill="#fff" stroke="#228B48" stroke-width="2.5"/>
+              <text x="222" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif">2</text>
+              <text x="222" y="96" text-anchor="middle" font-size="10" fill="#1A6D39">人 → AI</text>
+              <text x="222" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">Claudeに</text>
+              <text x="222" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">スキル化指示</text>
+              <text x="222" y="176" text-anchor="middle" font-size="10" fill="#777">1分（自然文）</text>
+              <!-- 矢印2 -->
+              <path d="M 267 80 L 297 80" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="297,74 309,80 297,86" fill="#228B48"/>
+              <!-- Step 3 ★ -->
+              <circle cx="354" cy="80" r="44" fill="#E8F5EC" stroke="#1A6D39" stroke-width="3"/>
+              <text x="354" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#0F4A28" font-family="Helvetica Neue,sans-serif">3</text>
+              <text x="354" y="96" text-anchor="middle" font-size="10" font-weight="700" fill="#0F4A28">★AI生成</text>
+              <text x="354" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#0F4A28">SKILL.md＋</text>
+              <text x="354" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#0F4A28">手順MD自動</text>
+              <text x="354" y="176" text-anchor="middle" font-size="10" fill="#1A6D39">数十秒</text>
+              <!-- 矢印3 -->
+              <path d="M 403 80 L 433 80" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="433,74 445,80 433,86" fill="#228B48"/>
+              <!-- Step 4 -->
+              <circle cx="490" cy="80" r="40" fill="#fff" stroke="#228B48" stroke-width="2.5"/>
+              <text x="490" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif">4</text>
+              <text x="490" y="96" text-anchor="middle" font-size="10" fill="#1A6D39">人 ⇄ AI</text>
+              <text x="490" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">試行・修正</text>
+              <text x="490" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">を3〜5回</text>
+              <text x="490" y="176" text-anchor="middle" font-size="10" fill="#777">数日〜1週間</text>
+              <!-- 矢印4 -->
+              <path d="M 535 80 L 565 80" stroke="#228B48" stroke-width="2.5" fill="none"/>
+              <polygon points="565,74 577,80 565,86" fill="#228B48"/>
+              <!-- Step 5 -->
+              <circle cx="622" cy="80" r="40" fill="#fff" stroke="#228B48" stroke-width="2.5"/>
+              <text x="622" y="76" text-anchor="middle" font-size="22" font-weight="700" fill="#228B48" font-family="Helvetica Neue,sans-serif">5</text>
+              <text x="622" y="96" text-anchor="middle" font-size="10" fill="#1A6D39">チーム配布</text>
+              <text x="622" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">チームに</text>
+              <text x="622" y="158" text-anchor="middle" font-size="12" font-weight="700" fill="#1a1a1a">共有・運用</text>
+              <text x="622" y="176" text-anchor="middle" font-size="10" fill="#777">即日</text>
+              <!-- 矢印 → 完成 -->
+              <path d="M 667 80 L 697 80" stroke="#1A6D39" stroke-width="3" fill="none"/>
+              <polygon points="697,74 709,80 697,86" fill="#1A6D39"/>
+              <!-- 完成 -->
+              <rect x="720" y="50" width="150" height="60" rx="6" fill="#1A6D39"/>
+              <text x="795" y="78" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">/arch-meeting</text>
+              <text x="795" y="98" text-anchor="middle" font-size="11" fill="#B8E5C5">完成・社内展開</text>
+              <text x="795" y="138" text-anchor="middle" font-size="11" fill="#1A6D39" font-weight="700">1コマンドで再現</text>
+              <text x="795" y="155" text-anchor="middle" font-size="10" fill="#555">代表が抜けても職員が回せる</text>
+            </g>
+          </svg>
+          <p class="flow-caption">★ STEP 3 がAIの主戦場。人は「手順を書く」「使ってフィードバックする」だけで、スキルが育つ。</p>
+        </div>
       </div>
 
       <!-- A2 Subagents -->
@@ -1999,6 +2157,54 @@ button { font-family: inherit; }
           <li><code>@arch-reviewer @arch-houmu @arch-seshu</code> のように呼び出し</li>
           <li>結果をマージ、優先度の高い指摘から対応</li>
         </ol>
+        <div class="flow-diagram in-card" role="figure" aria-labelledby="flow-a2-title">
+          <span class="flow-title" id="flow-a2-title">FLOW 3 / Subagents 3視点並列レビュー</span>
+          <svg class="flow-svg" viewBox="0 0 880 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="サブエージェントの並列レビュー：契約書PDFを3つの視点エージェントで同時検査し統合レポートに合流">
+            <g font-family="Noto Sans JP,sans-serif">
+              <!-- 入力 -->
+              <rect x="340" y="20" width="200" height="50" rx="6" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="440" y="42" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1a1a">📄 契約書PDF</text>
+              <text x="440" y="60" text-anchor="middle" font-size="11" fill="#555">設計監理委託契約・特約事項</text>
+              <!-- 分岐線 -->
+              <line x1="440" y1="70" x2="440" y2="95" stroke="#228B48" stroke-width="2"/>
+              <line x1="170" y1="95" x2="710" y2="95" stroke="#228B48" stroke-width="2"/>
+              <line x1="170" y1="95" x2="170" y2="115" stroke="#228B48" stroke-width="2"/>
+              <line x1="440" y1="95" x2="440" y2="115" stroke="#228B48" stroke-width="2"/>
+              <line x1="710" y1="95" x2="710" y2="115" stroke="#228B48" stroke-width="2"/>
+              <!-- 並列ラベル -->
+              <text x="440" y="108" text-anchor="middle" font-size="10" fill="#1A6D39" font-weight="700" font-family="Helvetica Neue,sans-serif" letter-spacing="0.1em">★並列実行（最大10並列）</text>
+              <!-- Agent 1 受託者 -->
+              <rect x="80" y="115" width="180" height="80" rx="6" fill="#E8F5EC" stroke="#1A6D39" stroke-width="2"/>
+              <text x="170" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39" font-family="Helvetica Neue,sans-serif" letter-spacing="0.1em">AGENT A</text>
+              <text x="170" y="156" text-anchor="middle" font-size="13" font-weight="700" fill="#0F4A28">受託者立場</text>
+              <text x="170" y="174" text-anchor="middle" font-size="11" fill="#1A6D39">瑕疵担保・著作権・</text>
+              <text x="170" y="188" text-anchor="middle" font-size="11" fill="#1A6D39">解除条項の不利を抽出</text>
+              <!-- Agent 2 法務 -->
+              <rect x="350" y="115" width="180" height="80" rx="6" fill="#E8F5EC" stroke="#1A6D39" stroke-width="2"/>
+              <text x="440" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39" font-family="Helvetica Neue,sans-serif" letter-spacing="0.1em">AGENT B</text>
+              <text x="440" y="156" text-anchor="middle" font-size="13" font-weight="700" fill="#0F4A28">法務リスク</text>
+              <text x="440" y="174" text-anchor="middle" font-size="11" fill="#1A6D39">建築士法・準委任／</text>
+              <text x="440" y="188" text-anchor="middle" font-size="11" fill="#1A6D39">請負の論点を検査</text>
+              <!-- Agent 3 施主 -->
+              <rect x="620" y="115" width="180" height="80" rx="6" fill="#E8F5EC" stroke="#1A6D39" stroke-width="2"/>
+              <text x="710" y="135" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39" font-family="Helvetica Neue,sans-serif" letter-spacing="0.1em">AGENT C</text>
+              <text x="710" y="156" text-anchor="middle" font-size="13" font-weight="700" fill="#0F4A28">施主立場</text>
+              <text x="710" y="174" text-anchor="middle" font-size="11" fill="#1A6D39">施主にとって</text>
+              <text x="710" y="188" text-anchor="middle" font-size="11" fill="#1A6D39">不公平な条項を点検</text>
+              <!-- 合流線 -->
+              <line x1="170" y1="195" x2="170" y2="215" stroke="#228B48" stroke-width="2"/>
+              <line x1="440" y1="195" x2="440" y2="215" stroke="#228B48" stroke-width="2"/>
+              <line x1="710" y1="195" x2="710" y2="215" stroke="#228B48" stroke-width="2"/>
+              <line x1="170" y1="215" x2="710" y2="215" stroke="#228B48" stroke-width="2"/>
+              <line x1="440" y1="215" x2="440" y2="235" stroke="#228B48" stroke-width="2"/>
+              <polygon points="434,232 446,232 440,243" fill="#228B48"/>
+              <!-- 統合 -->
+              <rect x="290" y="243" width="300" height="40" rx="6" fill="#1A6D39"/>
+              <text x="440" y="266" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">📋 統合レポート（優先度付き指摘リスト）</text>
+            </g>
+          </svg>
+          <p class="flow-caption">1人で3視点を順番にチェックすると約3時間 → 3エージェント並列で約30分。<strong>抜け漏れも減る</strong>のがポイント。</p>
+        </div>
       </div>
 
       <!-- A3 MCP -->
@@ -2020,6 +2226,54 @@ button { font-family: inherit; }
           <li>Findy Tech Blog事例：Notion MCPで <strong>1時間業務→5分</strong> に短縮</li>
           <li>中小企業（10〜100名）の管理部門で特に効果大（情報横断検索）</li>
         </ul>
+        <div class="flow-diagram in-card" role="figure" aria-labelledby="flow-a3-title">
+          <span class="flow-title" id="flow-a3-title">FLOW 4 / MCP接続イメージ — Claude Codeが外部ツールに手足を伸ばす</span>
+          <svg class="flow-svg" viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="MCP接続イメージ：Claude Codeを中心に、MCPサーバ経由でNotion・Google Drive・Gmail・Googleカレンダーに接続">
+            <g font-family="Noto Sans JP,sans-serif">
+              <!-- 中央：Claude Code -->
+              <circle cx="440" cy="150" r="68" fill="#1A6D39" stroke="#0F4A28" stroke-width="3"/>
+              <text x="440" y="140" text-anchor="middle" font-size="14" font-weight="700" fill="#fff">Claude Code</text>
+              <text x="440" y="158" text-anchor="middle" font-size="11" fill="#B8E5C5">デスクトップ</text>
+              <text x="440" y="178" text-anchor="middle" font-size="11" fill="#B8E5C5">（代表PC）</text>
+
+              <!-- MCP リング（USB-C接続のメタファー） -->
+              <text x="440" y="240" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39" font-family="Helvetica Neue,sans-serif" letter-spacing="0.15em">★ MCP（共通プロトコル）</text>
+              <text x="440" y="256" text-anchor="middle" font-size="10" fill="#777">＝USB-Cのように、どんな外部ツールでも同じ仕組みで繋げられる</text>
+
+              <!-- 接続線4本 -->
+              <line x1="380" y1="105" x2="160" y2="60" stroke="#228B48" stroke-width="2.5"/>
+              <line x1="500" y1="105" x2="720" y2="60" stroke="#228B48" stroke-width="2.5"/>
+              <line x1="380" y1="195" x2="160" y2="240" stroke="#228B48" stroke-width="2.5"/>
+              <line x1="500" y1="195" x2="720" y2="240" stroke="#228B48" stroke-width="2.5"/>
+
+              <!-- 外部ツール4個 -->
+              <!-- Notion -->
+              <rect x="40" y="30" width="180" height="65" rx="8" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="130" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">📝 Notion</text>
+              <text x="130" y="74" text-anchor="middle" font-size="11" fill="#555">案件DBに新規案件作成</text>
+              <text x="130" y="88" text-anchor="middle" font-size="11" fill="#555">進捗を自動更新</text>
+
+              <!-- Google Drive -->
+              <rect x="660" y="30" width="180" height="65" rx="8" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="750" y="55" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">📁 Google Drive</text>
+              <text x="750" y="74" text-anchor="middle" font-size="11" fill="#555">案件フォルダから</text>
+              <text x="750" y="88" text-anchor="middle" font-size="11" fill="#555">類似資料を即時取得</text>
+
+              <!-- Gmail -->
+              <rect x="40" y="210" width="180" height="65" rx="8" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="130" y="235" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">✉️ Gmail</text>
+              <text x="130" y="254" text-anchor="middle" font-size="11" fill="#555">施主メールを案件別に</text>
+              <text x="130" y="268" text-anchor="middle" font-size="11" fill="#555">仕分け＋返信ドラフト</text>
+
+              <!-- Calendar -->
+              <rect x="660" y="210" width="180" height="65" rx="8" fill="#fff" stroke="#228B48" stroke-width="2"/>
+              <text x="750" y="235" text-anchor="middle" font-size="14" font-weight="700" fill="#1a1a1a">📅 Googleカレンダー</text>
+              <text x="750" y="254" text-anchor="middle" font-size="11" fill="#555">翌日の打合せ予定→</text>
+              <text x="750" y="268" text-anchor="middle" font-size="11" fill="#555">ヒアリングシート準備</text>
+            </g>
+          </svg>
+          <p class="flow-caption">★イメージ：Claude Codeが「指令塔」、MCPが「USB-C」、外部ツールが「USB機器」。一度繋げば自然な日本語で操作できる。</p>
+        </div>
       </div>
 
       <!-- A4 Hooks -->
@@ -2196,6 +2450,96 @@ button { font-family: inherit; }
       <tr><th>M6</th><td><strong>Hooks＋Workflow本格運用</strong>（A4・A6・月末締めワンコマンド）<br>→ 月締め業務 半日→30分</td></tr>
     </table>
 
+    <div class="flow-diagram standalone" role="figure" aria-labelledby="flow-a9-title">
+      <span class="flow-title" id="flow-a9-title">FLOW 5 / 6ヶ月積み上げロードマップ</span>
+      <svg class="flow-svg" viewBox="0 0 880 380" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="6ヶ月積み上げロードマップ：M1〜M6で導入領域とROIが段階的に拡大">
+        <g font-family="Noto Sans JP,sans-serif">
+          <!-- Y軸ラベル -->
+          <text x="20" y="40" font-size="11" font-weight="700" fill="#1A6D39">月削減</text>
+          <text x="20" y="55" font-size="11" font-weight="700" fill="#1A6D39">時間</text>
+          <!-- X軸（時間軸） -->
+          <line x1="80" y1="320" x2="860" y2="320" stroke="#999" stroke-width="1.5"/>
+          <!-- Y軸 -->
+          <line x1="80" y1="40" x2="80" y2="320" stroke="#999" stroke-width="1.5"/>
+          <!-- グリッド -->
+          <line x1="80" y1="250" x2="860" y2="250" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="180" x2="860" y2="180" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="80" y1="110" x2="860" y2="110" stroke="#eee" stroke-width="1" stroke-dasharray="4,4"/>
+          <!-- Y軸目盛 -->
+          <text x="72" y="324" text-anchor="end" font-size="10" fill="#777">0h</text>
+          <text x="72" y="254" text-anchor="end" font-size="10" fill="#777">25h</text>
+          <text x="72" y="184" text-anchor="end" font-size="10" fill="#777">50h</text>
+          <text x="72" y="114" text-anchor="end" font-size="10" fill="#777">75h</text>
+          <text x="72" y="44" text-anchor="end" font-size="10" fill="#777">90h</text>
+
+          <!-- 6本の縦棒 -->
+          <!-- M1: 約15h -->
+          <rect x="120" y="275" width="100" height="45" fill="#B8E5C5" stroke="#1A6D39" stroke-width="1.5"/>
+          <text x="170" y="295" text-anchor="middle" font-size="11" font-weight="700" fill="#0F4A28">M1</text>
+          <text x="170" y="312" text-anchor="middle" font-size="10" fill="#0F4A28">議事録AI</text>
+          <text x="170" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">約15h削減</text>
+          <text x="170" y="355" text-anchor="middle" font-size="9" fill="#777">代表のみ</text>
+
+          <!-- M2: 約30h -->
+          <rect x="240" y="225" width="100" height="95" fill="#9BD9A8" stroke="#1A6D39" stroke-width="1.5"/>
+          <text x="290" y="245" text-anchor="middle" font-size="11" font-weight="700" fill="#0F4A28">M2</text>
+          <text x="290" y="265" text-anchor="middle" font-size="10" fill="#0F4A28">+独自Skills</text>
+          <text x="290" y="283" text-anchor="middle" font-size="10" fill="#0F4A28">×2本</text>
+          <text x="290" y="305" text-anchor="middle" font-size="10" fill="#0F4A28">/arch-meeting</text>
+          <text x="290" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">約30h削減</text>
+          <text x="290" y="355" text-anchor="middle" font-size="9" fill="#777">代表＋1名</text>
+
+          <!-- M3: 約45h -->
+          <rect x="360" y="180" width="100" height="140" fill="#7BC990" stroke="#1A6D39" stroke-width="1.5"/>
+          <text x="410" y="200" text-anchor="middle" font-size="11" font-weight="700" fill="#0F4A28">M3</text>
+          <text x="410" y="220" text-anchor="middle" font-size="10" fill="#0F4A28">+Subagents</text>
+          <text x="410" y="238" text-anchor="middle" font-size="10" fill="#0F4A28">契約3視点</text>
+          <text x="410" y="258" text-anchor="middle" font-size="10" fill="#0F4A28">設計3視点</text>
+          <text x="410" y="305" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">★伴走開始</text>
+          <text x="410" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">約45h削減</text>
+          <text x="410" y="355" text-anchor="middle" font-size="9" fill="#777">全員に展開</text>
+
+          <!-- M4: 約60h -->
+          <rect x="480" y="135" width="100" height="185" fill="#5BB876" stroke="#1A6D39" stroke-width="1.5"/>
+          <text x="530" y="155" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">M4</text>
+          <text x="530" y="175" text-anchor="middle" font-size="10" fill="#fff">+MCP連携</text>
+          <text x="530" y="193" text-anchor="middle" font-size="10" fill="#fff">Notion/</text>
+          <text x="530" y="211" text-anchor="middle" font-size="10" fill="#fff">Drive/Gmail</text>
+          <text x="530" y="240" text-anchor="middle" font-size="10" fill="#fff">資料探し</text>
+          <text x="530" y="257" text-anchor="middle" font-size="10" fill="#fff">-80%</text>
+          <text x="530" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">約60h削減</text>
+          <text x="530" y="355" text-anchor="middle" font-size="9" fill="#777">事務全体</text>
+
+          <!-- M5: 約75h -->
+          <rect x="600" y="95" width="100" height="225" fill="#3DA15D" stroke="#0F4A28" stroke-width="1.5"/>
+          <text x="650" y="115" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">M5</text>
+          <text x="650" y="135" text-anchor="middle" font-size="10" fill="#fff">+Memory</text>
+          <text x="650" y="152" text-anchor="middle" font-size="10" fill="#fff">施主・</text>
+          <text x="650" y="169" text-anchor="middle" font-size="10" fill="#fff">トラブル</text>
+          <text x="650" y="186" text-anchor="middle" font-size="10" fill="#fff">・判断ログ</text>
+          <text x="650" y="225" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">★属人化</text>
+          <text x="650" y="241" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">解消</text>
+          <text x="650" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">約75h削減</text>
+          <text x="650" y="355" text-anchor="middle" font-size="9" fill="#777">新人即戦力化</text>
+
+          <!-- M6: 約90h -->
+          <rect x="720" y="55" width="100" height="265" fill="#1A6D39" stroke="#0F4A28" stroke-width="1.5"/>
+          <text x="770" y="75" text-anchor="middle" font-size="11" font-weight="700" fill="#fff">M6</text>
+          <text x="770" y="95" text-anchor="middle" font-size="10" fill="#fff">+Hooks＋</text>
+          <text x="770" y="112" text-anchor="middle" font-size="10" fill="#fff">Workflow</text>
+          <text x="770" y="135" text-anchor="middle" font-size="10" fill="#fff">月末締め</text>
+          <text x="770" y="152" text-anchor="middle" font-size="10" fill="#fff">ワン</text>
+          <text x="770" y="169" text-anchor="middle" font-size="10" fill="#fff">コマンド</text>
+          <text x="770" y="220" text-anchor="middle" font-size="11" fill="#FFEB99" font-weight="700">月60-90h削減</text>
+          <text x="770" y="240" text-anchor="middle" font-size="10" fill="#fff">投資回収</text>
+          <text x="770" y="256" text-anchor="middle" font-size="10" fill="#fff">3-6ヶ月</text>
+          <text x="770" y="340" text-anchor="middle" font-size="11" font-weight="700" fill="#1A6D39">★ゴール</text>
+          <text x="770" y="355" text-anchor="middle" font-size="9" fill="#777">事務所合計</text>
+        </g>
+      </svg>
+      <p class="flow-caption">★ 棒の高さ＝事務所合計の月削減時間（3名分）。色が濃くなるほど運用領域が増える。<strong>M3以降は弊社の伴走支援を推奨。</strong></p>
+    </div>
+
     <h3>6ヶ月後の期待ROI</h3>
     <p style="font-size:13px; color:#666; margin-bottom:12px;">※ 数値の前提：職員3名規模・年商5,000万〜1億円の事務所をモデルとし、すべて<strong>事務所合計</strong>表記。1人あたりに換算する場合は ÷3 してください。</p>
     <ul>
@@ -2349,7 +2693,7 @@ button { font-family: inherit; }
     <p>
       担当：上村桂右<br>
       Mail：uemura@artsoul.jp<br>
-      本資料：建築設計事務所のためのAI活用マップ v1.1（2026-06-03 作成・同日 Claude Codeエージェント章追加）
+      本資料：建築設計事務所のためのAI活用マップ v1.2（2026-06-03 作成・同日 Claude Codeエージェント章追加・同日 初心者向けSVGフロー図5本追加）
     </p>
 
     <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:32px; font-size:14px;">主な出典・参考リンク</h3>
