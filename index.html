@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル 総まとめ v1.0</title>
+<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント深掘り v1.1</title>
 <meta name="description" content="職員3名の建築設計事務所が明日から使える、生成AI活用の総まとめ。チャプロ社カタログ60項目を業務フロー10カテゴリに再構造化し、ChatGPT/Google Workspace系とClaude Codeデスクトップそれぞれの実装例、初心者〜外注レベルまで段階的に解説。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -765,6 +765,131 @@ button { font-family: inherit; }
 .sources-list li { padding: 4px 0; font-size: 13px; }
 .sources-list a { word-break: break-all; }
 
+/* ===== Agents Section ===== */
+.agents-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  margin-top: 32px;
+}
+.agent-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #228B48;
+  border-radius: 6px;
+  padding: 26px 28px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.agent-card .agent-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: #228B48;
+  letter-spacing: 0.12em;
+  font-family: var(--font-en);
+  margin-bottom: 6px;
+}
+.agent-card h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.agent-card .agent-core {
+  background: var(--bg-green-alt);
+  border-left: 3px solid var(--primary-light);
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.75;
+}
+.agent-card h5 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--forest-deep);
+  margin: 14px 0 8px;
+  letter-spacing: 0.03em;
+}
+.agent-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+.agent-card ul li {
+  padding: 6px 0 6px 18px;
+  position: relative;
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.7;
+  border-bottom: 1px dashed #eee;
+  margin: 0;
+}
+.agent-card ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 10px;
+  height: 2px;
+  background: #228B48;
+}
+.agent-card ol {
+  padding-left: 1.4em;
+  margin: 0;
+  counter-reset: agent-step;
+}
+.agent-card ol li {
+  padding: 4px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #444;
+}
+.agent-card code,
+.agents-section code {
+  background: #f0f4f1;
+  color: var(--forest-deep);
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Helvetica Neue', monospace;
+  font-size: 12.5px;
+}
+.agents-cc-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin-top: 24px;
+}
+.cc-feat-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-top: 3px solid #34A85A;
+  border-radius: 6px;
+  padding: 16px 18px;
+}
+.cc-feat-card .cc-feat-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 4px;
+}
+.cc-feat-card .cc-feat-code {
+  font-size: 11px;
+  font-family: var(--font-en);
+  color: var(--primary);
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.cc-feat-card .cc-feat-desc {
+  font-size: 13px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin: 0;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .section { padding: 56px 0; }
@@ -861,6 +986,7 @@ button { font-family: inherit; }
       <a href="#levels">レベル別ロードマップ</a>
       <a href="#quickstart">明日からの3STEP</a>
       <a href="#cases">日本国内の事例</a>
+      <a href="#agents">Agentsで深掘り</a>
       <a href="#faq">FAQ</a>
     </div>
   </div>
@@ -1273,11 +1399,11 @@ button { font-family: inherit; }
               <span class="lvl-badge lv3">Lv3</span> 自社過去案件で学習させた専用モデル（LoRA訓練）は外注推奨。
             </td></tr>
             <tr><th>日本国内の事例</th><td><ul>
-              <li><strong>パース外注コスト50〜80%削減</strong>：工務店・設計事務所が初期提案・デザインスタディをAIパース「内製化」に置換した事例多数。</li>
+              <li><strong>パース外注コスト50〜80%削減</strong>：工務店・設計事務所が初期提案・デザインスタディをAIパース「内製化」に置換した事例多数。<br><strong>※規模別注記：</strong>この50〜80%は中〜大規模案件の数字。<strong>戸建住宅は施主提示の最終版で人手修正が入る</strong>ため削減効果は20〜40%程度が現実的。社内検討・初期合意形成での内製化が主戦場。</li>
               <li><strong>大規模オフィスビル設計</strong>：AIで初期案を短時間で数十種類生成し、クライアントとのブレストに活用。プロジェクト方向性を早期に決定。</li>
               <li><strong>株式会社シェルパ（福岡）</strong>：建築CGパース／AIパース／VR制作の自社サービスとしてAI活用ノウハウ発信。</li>
             </ul></td></tr>
-            <tr><th>注意点</th><td>初期提案・社内検討用と、施主提示用・公的提出用は品質基準が違う。後者はまだ人手の修正・専門パース会社との併用が現実的。</td></tr>
+            <tr><th>注意点</th><td>初期提案・社内検討用と、施主提示用・公的提出用は品質基準が違う。後者はまだ人手の修正・専門パース会社との併用が現実的。<strong>戸建中心の事務所は「初期コンセプト30案を1日で出す」用途が最も効果が大きい。</strong></td></tr>
           </table>
         </div>
       </div>
@@ -1470,7 +1596,7 @@ button { font-family: inherit; }
       <div class="tool-card group-b">
         <div class="tool-label">GROUP B</div>
         <div class="tool-name">Claude Codeデスクトップアプリ</div>
-        <div class="tool-price">月額 約$20〜$100／人 <small>Pro/Max プラン</small></div>
+        <div class="tool-price">月額 約 <strong>$20〜$100（約3,000〜15,000円）／人</strong> <small>Pro/Max プラン</small></div>
         <p class="tool-desc">
           ローカルPC上でフォルダごとファイルを読み込んで処理する開発者向けAIツール。建築事務所では「過去案件フォルダ横断」「CADスクリプト生成」「独自スキル開発」に圧倒的な強みを発揮。
         </p>
@@ -1511,15 +1637,15 @@ button { font-family: inherit; }
     <table class="cat-detail-table">
       <tr>
         <th>パターン①</th>
-        <td><strong>最小構成（月7,000円〜／人）</strong>：Google Workspace Business Standard（Gemini込み）＋ChatGPT個人プラン or 共用Team。<br>議事録・施主リライト・SNSから着手。全職員が即日使える。</td>
+        <td><strong>最小構成：月7,000円〜／人（3名計 約2.1万円／月）</strong><br>Google Workspace Business Standard（Gemini込み）＋ChatGPT個人プラン or 共用Team。<br>議事録・施主リライト・SNSから着手。全職員が即日使える。</td>
       </tr>
       <tr>
         <th>パターン②</th>
-        <td><strong>推奨構成（月15,000円〜／人）</strong>：パターン①＋Claude Code Pro（代表のみ）。<br>代表がClaude Codeで「うちの典型業務」をスキル化し、汎用AIから呼び出せる状態を作る。</td>
+        <td><strong>推奨構成：月15,000円〜（3名計）</strong>（パターン①の合計＋Claude Code Pro 代表のみ）<br>代表がClaude Codeで「うちの典型業務」をスキル化し、汎用AIから呼び出せる状態を作る。<strong>※本資料の「6ヶ月ロードマップ」の前提構成。</strong></td>
       </tr>
       <tr>
         <th>パターン③</th>
-        <td><strong>本格構成（月25,000円〜／人）</strong>：パターン②＋全員Claude Code＋外注で独自RAGチャットボット。<br>属人化解消・新人即戦力化を本気でやる。投資3〜6ヶ月で回収を狙う。</td>
+        <td><strong>本格構成：月25,000円〜／人（3名計 約7.5万円〜＋外注初期50〜100万円）</strong><br>パターン②＋全員Claude Code＋外注で独自RAGチャットボット。<br>属人化解消・新人即戦力化を本気でやる。投資3〜6ヶ月で回収を狙う。</td>
       </tr>
     </table>
   </div>
@@ -1810,11 +1936,286 @@ button { font-family: inherit; }
   </div>
 </section>
 
-<!-- ===== 07 / FAQ ===== -->
+<!-- ===== 07 / AGENTS ===== -->
+<section class="section agents-section" id="agents">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">07 / AGENTS</span>
+      <h2>Claude Codeエージェント深掘り — 「使う」から「作って育てる」へ</h2>
+    </div>
+    <p class="section-lead">
+      Claude Codeデスクトップの真価は、単なるチャットの先にある。<strong>Skills（業務ワンコマンド化）／Subagents（多視点並列レビュー）／MCP（外部システム接続）／Hooks（自動発火）／Memory（事務所ナレッジ蓄積）／Workflow（並列処理）</strong> を組み合わせると、建築事務所の業務フロー全体を「自分だけのAIアシスタント体系」として育てられる。<br>
+      ここでは <strong>職員3名でも導入できる9パターン</strong> を、具体的な実装プロセスとともに解説する。
+    </p>
+
+    <h3>A1〜A6：エージェント活用 6パターン</h3>
+    <p style="font-size:14px; color:#555; background:#FFFBEA; border-left:3px solid #E0B040; padding:12px 16px; border-radius:0 4px 4px 0; margin-bottom:24px;">
+      <strong>💡 はじめに：</strong>本章は <strong>パス表記・コマンド名・JSONなど技術用語が出てきます</strong>。これは「いきなり全部やる」前提ではなく、<a href="#agents-roadmap" style="color:#A14A00;">A9の6ヶ月ロードマップのM2以降で段階的に導入</a>するイメージで読んでください。<strong>M3以降は弊社の伴走支援を前提</strong>に設計しています。代表が独学で踏み込むのは M1（議事録AI＋NotebookLM）＋M2（最初の2スキル）までで十分です。
+    </p>
+    <div class="agents-grid">
+
+      <!-- A1 Skills -->
+      <div class="agent-card">
+        <div class="agent-num">A1 / SKILLS</div>
+        <h4>独自スキル — 業務をワンコマンド化する</h4>
+        <div class="agent-core">
+          <strong>核：</strong>決まった業務手順（議事録→アクション抽出→施主返信ドラフト等）を1コマンドで再現する自動化テンプレ。Claude Code Skills 2.0（2026/4公式リリース）で組織配布も可能。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li><code>/arch-meeting</code> — 録音→文字起こし→決定事項抽出→施主返信ドラフトを一気通貫</li>
+          <li><code>/arch-houki</code> — 案件情報を渡すと該当条文＋チェックリストが出力</li>
+          <li><code>/arch-pers</code> — スケッチ情報→Midjourney用プロンプト30本生成</li>
+          <li><code>/arch-blog</code> — 案件情報→ブログ記事ドラフト＋SNSキャプション3本</li>
+        </ul>
+        <h5>実装プロセス（5STEP）</h5>
+        <ol>
+          <li>業務手順を箇条書きで書き出す（30分）</li>
+          <li>Claude Codeに「これをスキル化して」と1文で指示</li>
+          <li>SKILL.md＋実行手順MDの2ファイルが自動生成</li>
+          <li>試行→修正を3〜5回繰り返して安定化</li>
+          <li>チームに共有（全員が同コマンドで再現可能）</li>
+        </ol>
+      </div>
+
+      <!-- A2 Subagents -->
+      <div class="agent-card">
+        <div class="agent-num">A2 / SUBAGENTS</div>
+        <h4>サブエージェント — 多視点で同時にレビュー</h4>
+        <div class="agent-core">
+          <strong>核：</strong>独立コンテキストで動くエージェントを並列で走らせる。最大10並列、3倍高速化。建築事務所では「契約・設計・プレゼン」の品質ゲート用途で効果絶大。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li><strong>契約書3視点レビュー：</strong>受託者立場／法務リスク／施主立場 を並列実行</li>
+          <li><strong>設計案3視点：</strong>構造／設備／意匠で同時検証</li>
+          <li><strong>プレゼン3視点：</strong>建築主／施工会社／行政の「伝わるか」検査</li>
+          <li><strong>新人教育：</strong>過去案件を「代表」「監理者」「施主」の3視点で解説させる教材化</li>
+        </ul>
+        <h5>実装プロセス</h5>
+        <ol>
+          <li>レビュー観点を3つに分解（チェックリスト書き出し）</li>
+          <li>各視点のシステムプロンプトを <code>~/.claude/agents/</code> に保存</li>
+          <li><code>@arch-reviewer @arch-houmu @arch-seshu</code> のように呼び出し</li>
+          <li>結果をマージ、優先度の高い指摘から対応</li>
+        </ol>
+      </div>
+
+      <!-- A3 MCP -->
+      <div class="agent-card">
+        <div class="agent-num">A3 / MCP</div>
+        <h4>MCP連携 — エージェントの手足を外部システムへ伸ばす</h4>
+        <div class="agent-core">
+          <strong>核：</strong>Model Context Protocol（MCP）で Notion／Google Drive／Gmail／カレンダー等100超のツールに接続。設定はコピペ程度・追加費用ゼロ・Claude Code Pro（月 $20＝約3,000円）の範囲に内包。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li><strong>Notion連携：</strong>案件管理DBに新規案件を自動作成・進捗更新</li>
+          <li><strong>Google Drive連携：</strong>案件フォルダから過去類似資料を瞬時取得</li>
+          <li><strong>Gmail連携：</strong>施主メールを案件別自動仕分け＋返信ドラフト</li>
+          <li><strong>Googleカレンダー連携：</strong>翌日の打合せ予定→自動でヒアリングシート準備</li>
+        </ul>
+        <h5>導入実績の目安</h5>
+        <ul>
+          <li>Findy Tech Blog事例：Notion MCPで <strong>1時間業務→5分</strong> に短縮</li>
+          <li>中小企業（10〜100名）の管理部門で特に効果大（情報横断検索）</li>
+        </ul>
+      </div>
+
+      <!-- A4 Hooks -->
+      <div class="agent-card">
+        <div class="agent-num">A4 / HOOKS</div>
+        <h4>Hooks — 特定イベントで自動発火</h4>
+        <div class="agent-core">
+          <strong>核：</strong>ファイル保存・git commit時などにスキルを自動実行。「気づいたらできていた」運用を実現。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li>図面PDFを <code>案件フォルダ/</code> に保存 → 自動で整合性チェック＋施主向け要約生成</li>
+          <li>議事録MDをcommit → タスクリスト・施主返信が別ファイルに出力</li>
+          <li>契約書PDF配置 → リスク条項抽出＋Excel化が自動完了</li>
+          <li>毎週月曜AM → 先週の議事録を集約して週次レポートに</li>
+        </ul>
+        <h5>実装プロセス</h5>
+        <ol>
+          <li><code>.claude/settings.json</code> にhook定義を追加</li>
+          <li>ファイル名パターン・トリガーイベントを指定</li>
+          <li>発火時に走るスキル名を結び付け</li>
+          <li>テスト→本番運用</li>
+        </ol>
+      </div>
+
+      <!-- A5 Memory -->
+      <div class="agent-card">
+        <div class="agent-num">A5 / MEMORY</div>
+        <h4>Memory — 事務所の頭脳を蓄積・継承する</h4>
+        <div class="agent-core">
+          <strong>核：</strong>過去案件の判断・トラブル・施主特性をMD形式で <code>memory/</code> に蓄積し、新案件着手時に自動参照させる。属人化解消の本丸。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li><code>memory/施主タイプ別対応辞典.md</code> — 価格重視／品質重視／関係重視の対応パターン</li>
+          <li><code>memory/トラブル事例集.md</code> — 過去の現場トラブルと再発防止策</li>
+          <li><code>memory/案件別判断ログ.md</code> — 「あの案件で代表がこう判断した理由」</li>
+          <li><code>memory/自治体協議メモ.md</code> — 自治体ごとの担当者特性・通りやすい論法</li>
+        </ul>
+        <h5>実装プロセス</h5>
+        <ol>
+          <li>案件終了時に <code>/memory-distill</code> 的スキルで自動抽出</li>
+          <li><code>CLAUDE.md</code> または <code>memory/</code> に追記</li>
+          <li>新案件着手時に類似メモリが自動でコンテキスト投入される</li>
+        </ol>
+      </div>
+
+      <!-- A6 Workflow -->
+      <div class="agent-card">
+        <div class="agent-num">A6 / WORKFLOW</div>
+        <h4>Workflow / Batch — 複数案件を並列処理</h4>
+        <div class="agent-core">
+          <strong>核：</strong>Workflowで「決まったフロー」を確定的に並列実行。fan-out → 個別処理 → 統合の3ステップで月締め・横断分析が一瞬。
+        </div>
+        <h5>建築事務所での例</h5>
+        <ul>
+          <li>10案件の月次議事録を同時要約 → 統合レポート生成</li>
+          <li>同じ施主の3案件横断分析（要望の傾向・予算推移）</li>
+          <li>新規案件着手時、過去5案件の類似情報を並列抽出</li>
+          <li>月末締めワンコマンド：請求書・進捗報告・翌月計画を同時生成</li>
+        </ul>
+        <h5>実装プロセス</h5>
+        <ol>
+          <li>シナリオを書く（入力→処理→出力）</li>
+          <li>Claude Codeに「Workflowスクリプトに」と指示</li>
+          <li>テスト1案件で動作確認 → 本番複数案件で並列実行</li>
+          <li>月末まで放置でも勝手に動く運用へ</li>
+        </ol>
+      </div>
+
+    </div>
+
+    <!-- A7 CC機能 -->
+    <h3 id="agents-cc">A7. CCの12機能 × 建築事務所応用マッピング</h3>
+    <p>Claude Codeは個別機能ではなく <strong>複数機能の組み合わせ</strong> で真価を発揮する。Kaiが業務遂行時に都度選定する12機能を、建築事務所文脈に置き換えると以下のとおり。</p>
+    <div class="agents-cc-grid">
+      <div class="cc-feat-card"><div class="cc-feat-name">Goal</div><div class="cc-feat-code">goal</div><div class="cc-feat-desc">「住宅A案件の基本設計を3週間で完了」のように目的を明示してエージェントに渡す</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Batch</div><div class="cc-feat-code">batch</div><div class="cc-feat-desc">月末に「全案件の進捗要約＋施主返信＋翌月計画」を一括処理</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Hooks</div><div class="cc-feat-code">hooks</div><div class="cc-feat-desc">図面PDF保存→整合性チェック＋施主向け要約を自動発火</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Rules</div><div class="cc-feat-code">rules</div><div class="cc-feat-desc">「個人情報はローカルのみ」「法規判断は必ず人手レビュー」をルール強制</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">DCI</div><div class="cc-feat-code">dci</div><div class="cc-feat-desc">提案→実装→検査の3フェーズを順守（提案書・契約書で必須）</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Fork</div><div class="cc-feat-code">fork</div><div class="cc-feat-desc">同施主に「コスト案／品質案／中庸案」を3並行作成</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Allow</div><div class="cc-feat-code">allow</div><div class="cc-feat-desc">「契約書アクセスは代表のみ」など権限制御</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Memory</div><div class="cc-feat-code">mem</div><div class="cc-feat-desc">過去案件・施主特性・トラブル事例の蓄積基盤（A5参照）</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Security</div><div class="cc-feat-code">sec</div><div class="cc-feat-desc">ローカル処理・暗号化・パスワード保護で施主情報を守る</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Tasks</div><div class="cc-feat-code">tasks</div><div class="cc-feat-desc">案件WBS・進捗を自動可視化（本資料もこの機能で進捗管理）</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Teams</div><div class="cc-feat-code">teams</div><div class="cc-feat-desc">設計／施工／監理／施主の4チームで並行作業を整理</div></div>
+      <div class="cc-feat-card"><div class="cc-feat-name">Ultra</div><div class="cc-feat-code">ultra</div><div class="cc-feat-desc">複雑な設計判断・コンセプト立案で「徹底的に深く考える」モード</div></div>
+    </div>
+
+    <!-- A8 AS資産転用 -->
+    <h3 id="agents-as">A8. AS既存スキル資産の建築事務所転用マップ</h3>
+    <p>ASのスキル群（16カテゴリ・55スキル）の多くは、建築事務所にそのまま転用可能。<strong>初期は赤字の3スキルだけ</strong>で導入効果が出る（議事録系・契約系・社内ナレッジ系の最頻出領域）。残りは「6ヶ月ロードマップが進んでから必要になったタイミング」で追加検討。</p>
+    <table class="cat-detail-table">
+      <tr>
+        <th>AS既存スキル</th>
+        <td>建築事務所での使い方（赤字は即効領域）</td>
+      </tr>
+      <tr style="background:#FFFBEA;">
+        <th style="background:#FFF1B8; color:#7A4A00;">★初期① <code>/contract-check</code></th>
+        <td><strong style="color:#A14A00;">受託者立場の契約書レビュー（Excel新旧対比＋Wordレポート）。設計受託契約・四会連合協定書等の見直しに直接効く。</strong></td>
+      </tr>
+      <tr style="background:#FFFBEA;">
+        <th style="background:#FFF1B8; color:#7A4A00;">★初期② <code>/knowledge-craft</code></th>
+        <td><strong style="color:#A14A00;">過去案件のナレッジを著作権セーフな資産MDに変換。属人化解消の本丸。新人教育コスト削減に直結。</strong></td>
+      </tr>
+      <tr style="background:#FFFBEA;">
+        <th style="background:#FFF1B8; color:#7A4A00;">★初期③ <code>/skill-craft</code></th>
+        <td><strong style="color:#A14A00;">事務所固有業務をスキル化（A1の自動生成エンジン）。<code>/arch-meeting</code> <code>/arch-houki</code> 等を作る。</strong></td>
+      </tr>
+      <tr>
+        <th><code>/research-publish</code></th>
+        <td>新工法・建材・補助金リサーチ → 限定公開HTMLで施主提示（本資料がまさにこの応用）</td>
+      </tr>
+      <tr>
+        <th><code>/seminar-slide</code></th>
+        <td>完成見学会・施主向け勉強会のスライドをテーマ投入から一気通貫で生成</td>
+      </tr>
+      <tr>
+        <th><code>/publish-proposal</code></th>
+        <td>提案書をパスワード付きGitHub Pagesで限定公開（本資料の公開方法）</td>
+      </tr>
+      <tr>
+        <th><code>/finance</code></th>
+        <td>案件別損益シミュレーション・DCF・損益分岐・キャッシュフロー予測</td>
+      </tr>
+      <tr>
+        <th><code>/rashinban</code></th>
+        <td>経営羅針盤（マンダラ64項目＋マトリクス＋ガント1ファイル）</td>
+      </tr>
+      <tr>
+        <th><code>/eval-daily</code> <code>/eval-weekly</code> <code>/eval-monthly</code></th>
+        <td>業務評価・週次レビュー・月次総括の自動化</td>
+      </tr>
+      <tr>
+        <th><code>/contract-check</code></th>
+        <td>受託者立場の契約書レビュー（Excel新旧対比＋Wordレポート）</td>
+      </tr>
+      <tr>
+        <th><code>/nda</code> <code>/biz-contract</code></th>
+        <td>NDA・業務委託契約のWord自動生成（11条・17条構成）</td>
+      </tr>
+      <tr>
+        <th><code>/billing-docs</code></th>
+        <td>見積書・請求書のExcel自動生成（消費税・インボイス番号自動）</td>
+      </tr>
+      <tr>
+        <th><code>/wbs-gantt</code></th>
+        <td>案件WBS・ガントチャート（日付変更でバー自動伸縮）</td>
+      </tr>
+      <tr>
+        <th><code>/daily-report</code> <code>/monthly-report</code></th>
+        <td>音声→6列Excel日報、日報→A4縦2P月次活動レポート</td>
+      </tr>
+      <tr>
+        <th><code>/text-refine</code></th>
+        <td>施主向けメール・X投稿・音声整文の自動ルーティング</td>
+      </tr>
+      <tr>
+        <th><code>/multi-sns-sanbo</code></th>
+        <td>マルチSNS戦略（Instagram/Pinterest/Threads等）の月次カレンダー</td>
+      </tr>
+    </table>
+
+    <!-- A9 ロードマップ -->
+    <h3 id="agents-roadmap">A9. 6ヶ月段階的導入ロードマップ＋期待ROI</h3>
+    <p>「いきなり全部」は失敗の元。代表1人から始め、月単位で領域を広げていく現実的なロードマップ。</p>
+    <table class="cat-detail-table">
+      <tr><th>M1（月）</th><td><strong>Claude Code Pro導入・代表のみ</strong>／議事録AI＋NotebookLM運用<br>→ 議事録月10時間が月3時間に</td></tr>
+      <tr><th>M2</th><td><strong><code>/arch-meeting</code> <code>/arch-houki</code> の2スキル開発</strong>（A1）<br>→ 案件ごと2〜3時間削減</td></tr>
+      <tr><th>M3</th><td><strong>サブエージェント3視点レビュー導入</strong>（A2・契約・設計案）<br>→ 品質向上＋人手レビュー回数を半減</td></tr>
+      <tr><th>M4</th><td><strong>MCP連携</strong>（A3・Notion or Google Drive）開始<br>→ 案件管理・資料探し時間を80%削減</td></tr>
+      <tr><th>M5</th><td><strong>Memory基盤構築</strong>（A5・施主・トラブル・判断ログ）<br>→ 属人化解消・新人即戦力化</td></tr>
+      <tr><th>M6</th><td><strong>Hooks＋Workflow本格運用</strong>（A4・A6・月末締めワンコマンド）<br>→ 月締め業務 半日→30分</td></tr>
+    </table>
+
+    <h3>6ヶ月後の期待ROI</h3>
+    <p style="font-size:13px; color:#666; margin-bottom:12px;">※ 数値の前提：職員3名規模・年商5,000万〜1億円の事務所をモデルとし、すべて<strong>事務所合計</strong>表記。1人あたりに換算する場合は ÷3 してください。</p>
+    <ul>
+      <li>業務時間 <strong>月60〜90時間削減</strong>（事務所合計＝3名 × 1人あたり月20〜30h）</li>
+      <li>新規受注 月1〜2件増の余地（時間を営業・新規事業に振り向け）</li>
+      <li>属人化リスク <strong>大幅低減</strong>（代表ダウン時の事業継続性向上）</li>
+      <li>投資回収目安 <strong>3〜6ヶ月</strong>（人件費換算で月20〜40万円の効果＝60〜90h × 時給3,000〜4,500円）</li>
+    </ul>
+
+    <p style="margin-top:24px; font-size:14px; color:#555;">
+      ※ M1〜M6のうち <strong>M1とM2は代表が独学で進めることも可能</strong>。M3以降は弊社の伴走支援（スキル設計・サブエージェント定義・MCP接続）でショートカットできます。
+    </p>
+  </div>
+</section>
+
+<!-- ===== 08 / FAQ ===== -->
 <section class="section alt-bg" id="faq">
   <div class="container">
     <div class="section-head">
-      <span class="section-num">07 / FAQ</span>
+      <span class="section-num">08 / FAQ</span>
       <h2>よくある質問</h2>
     </div>
 
@@ -1923,6 +2324,9 @@ button { font-family: inherit; }
         <li>属人化している業務（代表しかできない作業の特定）</li>
         <li>AI導入予算（月額・初期費用）と期待する成果（時短 / 品質 / 新規事業）</li>
         <li>学習に割ける時間（職員1人あたり週何時間）</li>
+        <li><strong>確認検査機関の電子申請対応</strong>（ICBA・日本ERI・確認サービス等）と図面差し戻しの実態</li>
+        <li><strong>採用契約書式</strong>（四会連合協定書／JIA推奨書式／自社書式）と<code>/contract-check</code>の適用可否</li>
+        <li><strong>建材メーカーAIカタログ・BIMオブジェクト</strong>（LIXIL／YKK AP／TOTO等）の活用希望</li>
       </ul>
     </div>
 
@@ -1945,7 +2349,7 @@ button { font-family: inherit; }
     <p>
       担当：上村桂右<br>
       Mail：uemura@artsoul.jp<br>
-      本資料：建築設計事務所のためのAI活用マップ v1.0（2026-06-03作成）
+      本資料：建築設計事務所のためのAI活用マップ v1.1（2026-06-03 作成・同日 Claude Codeエージェント章追加）
     </p>
 
     <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:32px; font-size:14px;">主な出典・参考リンク</h3>
