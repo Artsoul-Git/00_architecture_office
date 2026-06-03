@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル 総まとめ v1.0</title>
+<meta name="description" content="職員3名の建築設計事務所が明日から使える、生成AI活用の総まとめ。チャプロ社カタログ60項目を業務フロー10カテゴリに再構造化し、ChatGPT/Google Workspace系とClaude Codeデスクトップそれぞれの実装例、初心者〜外注レベルまで段階的に解説。" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== CSS Variables ===== */
+:root {
+  --primary: #228B48;
+  --primary-dark: #1A6D39;
+  --primary-light: #34A85A;
+  --primary-pale: #E8F5EC;
+  --forest-deep: #0F4A28;
+  --forest-mid: #1A6D39;
+  --black: #000000;
+  --charcoal: #1a1a1a;
+  --text-main: #333333;
+  --text-sub: #555555;
+  --text-mute: #666666;
+  --text-light: #999999;
+  --bg-main: #ffffff;
+  --bg-alt: #f5f5f5;
+  --bg-green-alt: #f7faf8;
+  --border: #e5e5e5;
+  --border-light: #eeeeee;
+  --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
+  --shadow-lg: 0 6px 20px rgba(34,139,72,0.15);
+  --radius: 6px;
+  --radius-sm: 4px;
+  --container: 1200px;
+  --section-pad-pc: 80px;
+  --section-pad-mb: 56px;
+  --font-jp: 'Noto Sans JP','Yu Gothic','Meiryo',sans-serif;
+  --font-en: 'Helvetica Neue',Arial,sans-serif;
+}
+
+/* ===== Reset & Base ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-jp);
+  background: var(--bg-main);
+  color: var(--text-main);
+  line-height: 1.7;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+a { color: var(--primary); text-decoration: none; transition: color 0.2s; }
+a:hover { color: var(--primary-dark); }
+img { max-width: 100%; display: block; }
+button { font-family: inherit; }
+
+/* ===== Layout ===== */
+.container { max-width: var(--container); margin: 0 auto; padding: 0 24px; }
+.section { padding: var(--section-pad-pc) 0; border-bottom: 1px solid var(--border); }
+.section.alt-bg { background: var(--bg-alt); }
+.section.green-alt { background: var(--bg-green-alt); }
+.section-head { margin-bottom: 48px; }
+.section-num {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+  font-family: var(--font-en);
+}
+.section-head h2 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.3;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--primary);
+  display: inline-block;
+  padding-right: 24px;
+}
+.section-lead {
+  font-size: 16px;
+  color: var(--text-sub);
+  line-height: 1.9;
+  margin: 24px 0 32px;
+  max-width: 840px;
+}
+.section h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin: 32px 0 16px;
+  padding-left: 12px;
+  border-left: 3px solid var(--primary);
+}
+.section p { font-size: 15px; color: #444; margin-bottom: 14px; line-height: 1.8; }
+.section ul, .section ol { margin: 12px 0 16px 1.4em; color: #444; }
+.section li { margin-bottom: 8px; font-size: 15px; line-height: 1.8; }
+
+/* ===== Hero ===== */
+.hero {
+  background: linear-gradient(135deg, #0F4A28 0%, #1A6D39 50%, #228B48 100%);
+  color: #fff;
+  padding: 96px 0 80px;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, transparent 100%);
+  pointer-events: none;
+}
+.hero .container { position: relative; z-index: 1; }
+.hero .badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.3);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin-bottom: 24px;
+  border-radius: 2px;
+}
+.hero h1 {
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 24px;
+  letter-spacing: 0.01em;
+  max-width: 940px;
+}
+.hero h1 .accent {
+  color: #B8E5C5;
+  border-bottom: 3px solid #B8E5C5;
+  padding-bottom: 2px;
+}
+.hero .sub {
+  font-size: 17px;
+  font-weight: 400;
+  opacity: 0.95;
+  margin-bottom: 40px;
+  line-height: 1.85;
+  max-width: 800px;
+}
+.hero .meta { margin-top: 24px; font-size: 13px; opacity: 0.85; line-height: 1.7; }
+.hero .anchor-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+}
+.hero .anchor-nav a {
+  padding: 8px 14px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.3);
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+.hero .anchor-nav a:hover {
+  background: rgba(255,255,255,0.2);
+  color: #fff;
+}
+
+/* ===== CTA Buttons ===== */
+.cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: #228B48;
+  color: #fff;
+  font-weight: 600;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  text-decoration: none;
+}
+.cta-btn::after { content: "→"; font-size: 16px; margin-left: 4px; }
+.cta-btn:hover { background: #1A6D39; box-shadow: 0 4px 12px rgba(0,0,0,0.15); color: #fff; }
+.cta-btn.primary { background: #228B48; }
+.cta-btn.secondary { background: #fff; color: #228B48; border: 1px solid #228B48; }
+.cta-btn.secondary:hover { background: #E8F5EC; color: #1A6D39; }
+.cta-btn.ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.6); }
+.cta-btn.ghost:hover { background: rgba(255,255,255,0.1); border-color: #fff; color: #fff; }
+.cta-btn.primary.inverse { background: #fff; color: #228B48; }
+.cta-btn.primary.inverse:hover { background: #E8F5EC; color: #1A6D39; }
+.cta-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+
+/* ===== Feature Grid (10カテゴリの俯瞰) ===== */
+.feature-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 32px;
+}
+.feature-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-top: 3px solid #228B48;
+  border-radius: 6px;
+  padding: 28px 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  color: inherit;
+}
+.feature-card .feature-num {
+  font-size: 28px;
+  font-weight: 700;
+  color: #228B48;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+.feature-card h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+.feature-card p {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ===== カテゴリ詳細アコーディオン ===== */
+.cat-accordion { margin-top: 24px; }
+.cat-item {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.cat-item.open {
+  border-color: #228B48;
+  box-shadow: 0 4px 16px rgba(34,139,72,0.10);
+}
+.cat-q {
+  padding: 20px 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.2s;
+}
+.cat-q:hover { background: var(--bg-green-alt); }
+.cat-q:focus-visible { outline: 2px solid #228B48; outline-offset: -2px; }
+.cat-q-label {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+.cat-q-num {
+  background: var(--primary);
+  color: #fff;
+  font-family: var(--font-en);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+.cat-q-title {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--charcoal);
+  line-height: 1.4;
+}
+.cat-q-mark {
+  font-size: 20px;
+  color: #228B48;
+  flex-shrink: 0;
+  margin-left: 12px;
+  transition: transform 0.2s;
+  font-weight: 400;
+}
+.cat-item.open .cat-q .cat-q-mark { transform: rotate(45deg); }
+.cat-a {
+  padding: 0 24px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s, padding 0.3s;
+  background: #fafafa;
+  border-top: 1px solid transparent;
+}
+.cat-item.open .cat-a {
+  padding: 24px;
+  max-height: 4000px;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* カテゴリ詳細テーブル */
+.cat-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+.cat-detail-table th,
+.cat-detail-table td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #eee;
+}
+.cat-detail-table th {
+  background: var(--primary-pale);
+  color: var(--forest-deep);
+  font-weight: 600;
+  white-space: nowrap;
+  width: 22%;
+  border-right: 1px solid #d4ead9;
+}
+.cat-detail-table tr:last-child th,
+.cat-detail-table tr:last-child td { border-bottom: none; }
+.cat-detail-table td { line-height: 1.8; color: #444; }
+.cat-detail-table ul { margin: 4px 0 4px 1.2em; }
+.cat-detail-table li { margin-bottom: 4px; font-size: 14px; line-height: 1.7; }
+.cat-detail-table code {
+  background: #f0f4f1;
+  color: var(--forest-deep);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Helvetica Neue', monospace;
+  font-size: 13px;
+}
+
+.lvl-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-radius: 2px;
+  margin-right: 4px;
+}
+.lvl-badge.lv1 { background: #E8F5EC; color: #1A6D39; }
+.lvl-badge.lv2 { background: #B8E5C5; color: #0F4A28; }
+.lvl-badge.lv3 { background: #1A6D39; color: #fff; }
+
+/* ===== ツール比較カード ===== */
+.tool-grid {
+  display: grid;
+  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  margin-top: 32px;
+}
+.tool-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 32px 28px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.tool-card.group-a { border-top: 3px solid #6c7a89; }
+.tool-card.group-b { border-top: 3px solid #228B48; }
+.tool-card .tool-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--text-mute);
+  font-family: var(--font-en);
+  margin-bottom: 8px;
+}
+.tool-card .tool-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.tool-card .tool-price {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 16px;
+}
+.tool-card .tool-price small {
+  font-size: 13px;
+  color: #777;
+  font-weight: 500;
+  margin-left: 6px;
+}
+.tool-card .tool-desc {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed #ddd;
+  line-height: 1.8;
+}
+.tool-card h5 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--forest-deep);
+  margin: 16px 0 8px;
+  letter-spacing: 0.02em;
+}
+.tool-card ul {
+  list-style: none;
+  margin: 0 0 12px;
+  padding: 0;
+}
+.tool-card ul li {
+  padding: 6px 0 6px 20px;
+  position: relative;
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.6;
+  border-bottom: 1px dashed #eee;
+  margin: 0;
+}
+.tool-card ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 12px;
+  height: 2px;
+  background: #228B48;
+}
+.tool-card .tool-verdict {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+  font-size: 13px;
+  color: #555;
+  background: var(--bg-green-alt);
+  margin-left: -28px;
+  margin-right: -28px;
+  margin-bottom: -32px;
+  padding: 18px 28px;
+}
+.tool-card .tool-verdict strong { color: var(--forest-deep); }
+
+/* ===== Level Roadmap ===== */
+.level-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  margin-top: 32px;
+}
+.level-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 32px 28px;
+  position: relative;
+}
+.level-card.lv1 { border-top: 4px solid #B8E5C5; }
+.level-card.lv2 { border-top: 4px solid #34A85A; }
+.level-card.lv3 { border-top: 4px solid #0F4A28; }
+.level-card .level-tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--primary-pale);
+  color: var(--forest-deep);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  border-radius: 3px;
+  margin-bottom: 12px;
+  font-family: var(--font-en);
+}
+.level-card.lv2 .level-tag { background: #34A85A; color: #fff; }
+.level-card.lv3 .level-tag { background: var(--forest-deep); color: #fff; }
+.level-card h4 {
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.level-card .timeline {
+  font-size: 13px;
+  color: var(--text-mute);
+  margin-bottom: 16px;
+}
+.level-card .level-desc {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 16px;
+  line-height: 1.8;
+  padding-bottom: 14px;
+  border-bottom: 1px dashed #ddd;
+}
+.level-card ul { list-style: none; padding: 0; margin: 0; }
+.level-card ul li {
+  padding: 8px 0 8px 22px;
+  position: relative;
+  font-size: 14px;
+  color: #444;
+  line-height: 1.65;
+  border-bottom: 1px dashed #eee;
+  margin: 0;
+}
+.level-card ul li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  color: #228B48;
+  font-weight: 600;
+}
+
+/* ===== QuickStart STEP ===== */
+.step-list { margin-top: 32px; }
+.step-item {
+  display: flex;
+  gap: 24px;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #228B48;
+  border-radius: 6px;
+  padding: 28px 32px;
+  margin-bottom: 16px;
+}
+.step-item .step-num {
+  font-size: 32px;
+  font-weight: 700;
+  color: #228B48;
+  font-family: var(--font-en);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 60px;
+}
+.step-item .step-body { flex: 1; }
+.step-item h4 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.step-item .step-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 12px;
+  color: var(--text-mute);
+  margin-bottom: 12px;
+  font-family: var(--font-en);
+  letter-spacing: 0.05em;
+}
+.step-item .step-meta span {
+  background: var(--primary-pale);
+  color: var(--forest-deep);
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-weight: 600;
+}
+.step-item p {
+  font-size: 14px;
+  color: var(--text-sub);
+  margin-bottom: 8px;
+  line-height: 1.8;
+}
+.step-item ul {
+  margin: 12px 0 0 1.2em;
+  font-size: 14px;
+  color: #444;
+}
+
+/* ===== Case Cards ===== */
+.case-grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  margin-top: 32px;
+}
+.case-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  padding: 24px;
+}
+.case-card .case-source {
+  font-size: 11px;
+  color: var(--text-light);
+  letter-spacing: 0.1em;
+  margin-bottom: 6px;
+  font-family: var(--font-en);
+}
+.case-card h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.case-card .case-detail {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.case-card .case-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed #eee;
+}
+.case-card .case-tag {
+  font-size: 11px;
+  padding: 3px 8px;
+  background: var(--bg-green-alt);
+  color: var(--forest-mid);
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.case-card .case-link {
+  display: inline-block;
+  font-size: 13px;
+  color: var(--primary);
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+/* ===== FAQ ===== */
+.faq-item {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+.faq-item.open { border-color: #228B48; }
+.faq-q {
+  padding: 18px 24px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #1a1a1a;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: background 0.2s;
+  width: 100%;
+  background: transparent;
+  border: none;
+  text-align: left;
+  font-family: inherit;
+}
+.faq-q:hover { background: #f5f5f5; }
+.faq-q:focus-visible { outline: 2px solid #228B48; outline-offset: -2px; }
+.faq-q .mark {
+  font-size: 18px;
+  color: #228B48;
+  flex-shrink: 0;
+  margin-left: 12px;
+  transition: transform 0.2s;
+  font-weight: 400;
+}
+.faq-item.open .faq-q .mark { transform: rotate(45deg); }
+.faq-a {
+  padding: 0 24px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s, padding 0.3s;
+  color: #555;
+  font-size: 14px;
+  line-height: 1.9;
+  background: #fafafa;
+  border-top: 1px solid transparent;
+}
+.faq-item.open .faq-a {
+  padding: 18px 24px;
+  max-height: 600px;
+  border-top: 1px solid #e5e5e5;
+}
+
+/* ===== Contact Box ===== */
+.contact-box {
+  background: linear-gradient(135deg, #1A6D39 0%, #228B48 100%);
+  color: #fff;
+  padding: 64px 0;
+  text-align: center;
+}
+.contact-box h2 { font-size: 28px; font-weight: 600; margin-bottom: 16px; line-height: 1.3; }
+.contact-box p { font-size: 16px; opacity: 0.95; margin-bottom: 32px; line-height: 1.8; }
+.contact-box .checklist {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  padding: 24px;
+  text-align: left;
+  max-width: 720px;
+  margin: 0 auto 32px;
+}
+.contact-box .checklist h4 {
+  font-size: 14px;
+  letter-spacing: 0.1em;
+  margin-bottom: 12px;
+  opacity: 0.9;
+  font-family: var(--font-en);
+}
+.contact-box .checklist ul { list-style: none; padding: 0; margin: 0; }
+.contact-box .checklist li {
+  padding: 8px 0 8px 24px;
+  position: relative;
+  font-size: 14px;
+  line-height: 1.6;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+}
+.contact-box .checklist li:last-child { border-bottom: none; }
+.contact-box .checklist li::before {
+  content: "□";
+  position: absolute;
+  left: 0;
+  top: 8px;
+  color: #B8E5C5;
+  font-weight: 600;
+}
+.contact-box .cta-group { justify-content: center; }
+
+/* ===== Footer ===== */
+.footer {
+  background: #0F4A28;
+  color: #c8d8cc;
+  padding: 40px 0;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.footer .company { font-weight: 600; font-size: 15px; color: #fff; margin-bottom: 10px; }
+.footer .copy { margin-top: 20px; opacity: 0.7; font-size: 12px; }
+
+/* ===== Sources ===== */
+.sources-list { font-size: 13px; color: var(--text-mute); margin-top: 16px; }
+.sources-list li { padding: 4px 0; font-size: 13px; }
+.sources-list a { word-break: break-all; }
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .section { padding: 56px 0; }
+  .container { padding: 0 20px; }
+  .hero { padding: 72px 0 56px; }
+  .hero h1 { font-size: 30px; }
+  .hero .sub { font-size: 15px; }
+  .section-head h2 { font-size: 24px; }
+  .section h3 { font-size: 16px; }
+  .section p, .section li { font-size: 14px; }
+  .contact-box h2 { font-size: 24px; }
+  .cat-q-title { font-size: 15px; }
+  .cat-q-num { font-size: 11px; }
+  .cat-detail-table { font-size: 13px; }
+  .cat-detail-table th { width: 30%; padding: 10px 12px; }
+  .cat-detail-table td { padding: 10px 12px; }
+  .step-item { flex-direction: column; gap: 12px; padding: 24px; }
+  .step-item .step-num { width: auto; }
+  .tool-card { padding: 28px 24px; }
+}
+@media (max-width: 480px) {
+  .section { padding: 40px 0; }
+  .hero { padding: 56px 0 40px; }
+  .hero h1 { font-size: 24px; }
+  .hero .sub { font-size: 14px; }
+  .section-head h2 { font-size: 20px; padding-right: 16px; }
+  .cta-btn { padding: 12px 24px; font-size: 14px; }
+  .contact-box h2 { font-size: 20px; }
+  .cat-q { padding: 16px 18px; }
+  .cat-item.open .cat-a { padding: 18px; }
+  .cat-q-label { gap: 10px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ====== PASSWORD GATE ====== -->
+<div id="password-gate" style="position:fixed;inset:0;background:linear-gradient(135deg,#0F4A28 0%,#1A6D39 50%,#228B48 100%);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;font-family:'Noto Sans JP','Yu Gothic','Meiryo',sans-serif;padding:20px;text-align:center;">
+  <div style="background:rgba(255,255,255,0.06);padding:40px 32px;border-radius:12px;border:1px solid rgba(255,255,255,0.18);max-width:440px;width:100%;backdrop-filter:blur(6px);">
+    <div style="font-size:12px;letter-spacing:0.18em;opacity:0.85;margin-bottom:14px;font-family:'Helvetica Neue',Arial,sans-serif;">AI ACTIVATION MAP / FOR ARCHITECTS</div>
+    <h2 style="font-size:20px;font-weight:700;margin-bottom:10px;line-height:1.5;">閲覧パスワードを入力してください</h2>
+    <p style="font-size:13px;opacity:0.85;margin-bottom:24px;line-height:1.7;">本資料は建築事務所代表向け限定公開です。<br>パスワードは別途お知らせしたものをご入力ください。</p>
+    <input type="password" id="pwd-input" placeholder="パスワード" autocomplete="off" style="padding:13px 16px;width:100%;border:1px solid rgba(255,255,255,0.4);border-radius:6px;margin-bottom:14px;font-size:15px;background:rgba(255,255,255,0.96);color:#1a1a1a;font-family:inherit;outline:none;">
+    <button id="pwd-btn" type="button" style="padding:13px 32px;background:#fff;color:#228B48;border:none;border-radius:6px;cursor:pointer;font-size:15px;font-weight:700;width:100%;font-family:inherit;transition:background 0.2s,color 0.2s;">閲覧する →</button>
+    <p id="pwd-err" style="font-size:12px;color:#FFB8B8;margin-top:12px;min-height:16px;display:none;">パスワードが違います。もう一度お試しください。</p>
+    <p style="font-size:11px;opacity:0.6;margin-top:24px;line-height:1.6;">© 有限会社アートソウル AS AI導入支援事業</p>
+  </div>
+</div>
+<script>
+(function(){
+  var PASS = 'as02062026';
+  var gate = document.getElementById('password-gate');
+  var input = document.getElementById('pwd-input');
+  var btn = document.getElementById('pwd-btn');
+  var err = document.getElementById('pwd-err');
+  if(sessionStorage.getItem('arch_office_auth')==='ok'){
+    gate.style.display='none';
+    return;
+  }
+  function tryAuth(){
+    if(input.value === PASS){
+      sessionStorage.setItem('arch_office_auth','ok');
+      gate.style.display='none';
+    } else {
+      err.style.display='block';
+      input.value='';
+      input.focus();
+    }
+  }
+  btn.addEventListener('click', tryAuth);
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){ e.preventDefault(); tryAuth(); }
+  });
+  setTimeout(function(){ try{ input.focus(); }catch(e){} }, 200);
+})();
+</script>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="container">
+    <span class="badge">AI ACTIVATION MAP / FOR ARCHITECTS</span>
+    <h1>
+      職員3名の建築設計事務所が<br>
+      <span class="accent">明日から使える</span>、生成AI活用マップ。
+    </h1>
+    <p class="sub">
+      チャプロ「建築事務所のための生成AI活用法」60項目を、業務フロー <strong>10カテゴリ</strong> × ツール群 <strong>2軸</strong>（汎用AI／Claude Code） × 実装難易度 <strong>3レベル</strong>（初心者・中級・上級&外注）で再構造化。代表者・職員が「何から手を付けるか」を3秒で決められる総まとめ。
+    </p>
+    <p class="meta">出典：チャプロ社カタログ（11ページ）＋ 日本国内の建築・建設業AI活用事例リサーチ（2025-2026）</p>
+    <div class="anchor-nav">
+      <a href="#categories">10カテゴリ俯瞰</a>
+      <a href="#details">課題別詳細</a>
+      <a href="#tools">ツール比較</a>
+      <a href="#levels">レベル別ロードマップ</a>
+      <a href="#quickstart">明日からの3STEP</a>
+      <a href="#cases">日本国内の事例</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 00 / OVERVIEW ===== -->
+<section class="section" id="overview">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">00 / OVERVIEW</span>
+      <h2>この資料の使い方</h2>
+    </div>
+    <p class="section-lead">
+      原典のチャプロ社カタログPDFは「ドキュメント作成／アイデア創出／業務効率化…」など <strong>機能別</strong> に60項目が並んでいますが、それでは「自分の事務所のどの場面で使えるか」が即座につながりません。<br>
+      この資料では、職員3名規模の建築設計事務所の <strong>業務フロー</strong>（受注前〜基本設計〜実施設計〜監理〜引渡〜経営）に沿って10カテゴリに再分類し、各カテゴリで「<strong>何ができるか</strong>」「<strong>何を使うか</strong>」「<strong>どこまでなら自前でできて、どこから外注か</strong>」を一望できる構成にしました。
+    </p>
+
+    <h3>読み方の3つの軸</h3>
+    <table class="cat-detail-table">
+      <tr>
+        <th>軸A：課題カテゴリ</th>
+        <td>業務フロー順10軸（C1〜C10）。困っている業務に直接ジャンプして読む。</td>
+      </tr>
+      <tr>
+        <th>軸B：ツール群</th>
+        <td>
+          <strong>A群＝汎用AI</strong>：ChatGPT（個人/Team）／Google Workspace Business Standard（Gemini・NotebookLM・Google Apps Script）<br>
+          <strong>B群＝Claude Codeデスクトップ</strong>：ローカルファイル直接処理／独自スキル開発／長文・複数ファイル横断処理
+        </td>
+      </tr>
+      <tr>
+        <th>軸C：実装難易度</th>
+        <td>
+          <span class="lvl-badge lv1">Lv1</span>初心者〜中級者：プロンプト1個・既存UIの操作で完結<br>
+          <span class="lvl-badge lv2">Lv2</span>中級〜上級者：定型ワークフロー化・チーム共有<br>
+          <span class="lvl-badge lv3">Lv3</span>上級または外注：カスタムチャットボット・RAG・CAD自動化・BIM連携
+        </td>
+      </tr>
+    </table>
+
+    <h3>原典PDFと本資料の対応</h3>
+    <p>
+      原典PDFの7大分類（ドキュメント作成／文章校正／要約翻訳／コンテンツ制作／マルチメディア／アイデア創出／業務効率化／業務プロセス／マーケ広告／チャットボット／人物プロファイル／情報収集／データ分析／プログラミング／教育学習／戦略的意思決定）は、本資料では業務フロー10カテゴリにマッピングされています。詳細マッピングは <code>02_分析・要件/PDFマッピング_課題別.md</code> 参照。
+    </p>
+  </div>
+</section>
+
+<!-- ===== 01 / CATEGORIES ===== -->
+<section class="section alt-bg" id="categories">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">01 / CATEGORIES</span>
+      <h2>10カテゴリの俯瞰マップ</h2>
+    </div>
+    <p class="section-lead">
+      業務フロー順に10カテゴリ。各カードをクリックすると下の <a href="#details">02 / DETAILS</a> の該当アコーディオンに移動します。
+    </p>
+
+    <div class="feature-grid">
+      <a class="feature-card" href="#c1">
+        <div class="feature-num">C1</div>
+        <h4>提案・コンセプト立案</h4>
+        <p>敷地条件・施主要望からプレゼンの骨子、コンセプトストーリー、ペルソナ設定を言語化。受注前〜基本設計初期。</p>
+      </a>
+      <a class="feature-card" href="#c2">
+        <div class="feature-num">C2</div>
+        <h4>設計実務サポート</h4>
+        <p>図面チェック、仕様書の表記揺れ修正、色彩計画パターン、現場トラブル予測。属人化しがちな品質管理を補強。</p>
+      </a>
+      <a class="feature-card" href="#c3">
+        <div class="feature-num">C3</div>
+        <h4>法規・申請</h4>
+        <p>建築基準法・自治体条例の該当条文抽出、建蔽率・容積率の計算根拠、社内用語集、法規RAGチャットボット。</p>
+      </a>
+      <a class="feature-card" href="#c4">
+        <div class="feature-num">C4</div>
+        <h4>施主・関係者コミュニケーション</h4>
+        <p>議事録自動生成、施主向け平易リライト、ヒアリング質問リスト、FAQボット。打合せから引渡までの全工程対応。</p>
+      </a>
+      <a class="feature-card" href="#c5">
+        <div class="feature-num">C5</div>
+        <h4>契約・リスク管理</h4>
+        <p>設計契約・特約事項のドラフト、契約書の不利条項チェック、海外契約条項比較、資材高騰リスク分析。</p>
+      </a>
+      <a class="feature-card" href="#c6">
+        <div class="feature-num">C6</div>
+        <h4>マーケ・集客・SNS発信</h4>
+        <p>ブログ記事、Instagram/Pinterestキャプション、完成見学会の集客戦略、来場予約の説明文。</p>
+      </a>
+      <a class="feature-card" href="#c7">
+        <div class="feature-num">C7</div>
+        <h4>ビジュアル制作（パース・3D）</h4>
+        <p>ラフスケッチ→フォトリアルパース、内装比較資料、ウォークスルー動画。初期提案のスピードアップ。</p>
+      </a>
+      <a class="feature-card" href="#c8">
+        <div class="feature-num">C8</div>
+        <h4>CAD・データ自動化・BIM</h4>
+        <p>AutoCAD/Rhinoスクリプト、Excel自動化、VBA→Python移植、BIMモデル生成、ランニングコスト予測。</p>
+      </a>
+      <a class="feature-card" href="#c9">
+        <div class="feature-num">C9</div>
+        <h4>ナレッジ・教育・属人化解消</h4>
+        <p>社内マニュアル自動化、新人向け教材、過去事例ベースの社内Q&Aチャットボット、ロールプレイ研修。</p>
+      </a>
+      <a class="feature-card" href="#c10">
+        <div class="feature-num">C10</div>
+        <h4>経営・戦略</h4>
+        <p>空き家再生・PFI・モジュール建築の新規事業ブレスト、スケジュール最適化、サプライチェーンリスク分析。</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 02 / DETAILS ===== -->
+<section class="section" id="details">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">02 / DETAILS</span>
+      <h2>10カテゴリ詳細</h2>
+    </div>
+    <p class="section-lead">
+      各カテゴリで「誰の悩み／具体ユースケース／推奨ツール（汎用AI／Claude Code）／難易度／日本国内の事例／注意点」を整理。クリックで展開。
+    </p>
+
+    <div class="cat-accordion">
+
+      <!-- C1 -->
+      <div class="cat-item" id="c1">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C1</span>
+            <span class="cat-q-title">提案・コンセプト立案</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>代表が「この敷地・施主に何を提案するか」を言語化するフェーズ。プレゼン骨子作りに時間がかかる、コンセプトのストーリーが弱い、毎回ゼロから書く。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>敷地条件＋施主要望からプレゼン資料の構成案を5パターン生成</li>
+              <li>土地の歴史・風土からコンセプトストーリーを言語化（10案 → 3案に絞る）</li>
+              <li>「住む人」のペルソナ詳細（年齢・職業・家族構成・1日の動線）を物語化</li>
+              <li>空間の暮らしイメージをコピーライティング化（「リビングは家族の本棚」など）</li>
+              <li>建物名・マンション名・架空の街区名のネーミング案</li>
+              <li>施主のライフスタイル別の設計訴求軸（共働き／二世帯／DINKS等）</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT（Plus/Team）</strong>：単発のコンセプト生成・コピー案出し。GPT-5の長文出力で骨子→詳細展開を一気通貫。<br>
+              <strong>NotebookLM</strong>：過去の自分の提案書PDFを20本投入し、「うちの事務所らしいコンセプトの書き方」を学習させて文体を継承させる使い方が有効。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：過去案件フォルダのプレゼン.pptx・docx・図面を全部読ませて「この事務所の典型コンセプトパターン」を抽出し、新規案件向けのドラフトを一気に書かせる。長文＋複数ファイル横断処理がGPTより得意。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTにプロンプト直打ち（5分）。代表が一人で運用可能。<br>
+              <span class="lvl-badge lv2">Lv2</span> 「敷地情報→コンセプト案5本」の自前テンプレを社内共有（チームメンバー誰でも同品質）。<br>
+              <span class="lvl-badge lv3">Lv3</span> 過去案件のRAG（NotebookLM 50本以上 or 独自RAG）でブランド文体を継承する仕組みを構築。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>隈研吾建築都市設計事務所</strong>：Midjourneyを設計支援に活用。「過去作品に似たデザイン」をAIに生成させ、それを<em>避ける基準</em>として使うことで、所員が既存の枠を超えた創造に挑む。</li>
+              <li><strong>船井総研の設計事務所向け活用5選</strong>：プロポーザル用コンセプト案出しでChatGPTを下書きに使う運用が普及。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>施主の個人情報（氏名・住所・家族構成）をChatGPT個人版に入れない。Plus以上でも学習オプトアウト設定を確認。Claude Codeはローカル処理なのでこの問題に強い。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C2 -->
+      <div class="cat-item" id="c2">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C2</span>
+            <span class="cat-q-title">設計実務サポート（図面・仕様書・色彩・現場リスク）</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>設計実務中の「品質チェック」「仕様書の表記揺れ」「複数案の比較」が属人化。代表しか正解を知らない。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>設計図書の標準化ルール（事務所固有）を文書化</li>
+              <li>仕様書の用語ゆれ統一（「コンクリート」「RC」「鉄筋コンクリート」の併用整理）</li>
+              <li>外壁・内装材の色組み合わせ案を画像生成AIで複数パターン</li>
+              <li>複数の設計案を法規制・周辺環境・コスト軸で客観比較</li>
+              <li>図面と仕様書の整合性チェック（部屋名・面積・仕上の不一致発見）</li>
+              <li>過去のトラブル事例・工期遅延データから現場リスク予測</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT</strong>：仕様書の用語統一・整合性チェック（PDFアップロード→「表記揺れを抽出して」）。<br>
+              <strong>Gemini</strong>：Google Drive上の仕様書・図面リストを横断検索・要約。<br>
+              <strong>Stable Diffusion + ControlNet</strong>：色彩計画パターン生成。Inpaint機能で斜線制限内の代替ボリュームを検討（実務で運用報告あり）。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：図面PDFと仕様書を同時に読み込ませて「面積表と平面図の不整合をリストアップ」。Excelの面積計算表とCAD出力の差分検出をスクリプト化できる。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTに仕様書PDFを上げて「表記揺れチェック」（即時）。<br>
+              <span class="lvl-badge lv2">Lv2</span> Stable Diffusion + ControlNetでスケッチ→パース、Inpaintでボリューム検討（独学2〜4週間）。<br>
+              <span class="lvl-badge lv3">Lv3</span> 図面整合性チェックの自動化・過去案件のリスク予測モデル（外注）。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>大林組</strong>：構造設計の「断面設計」を自動化する「構造設計支援AIプログラム」を開発。RC造・混合構造へ順次展開予定。</li>
+              <li><strong>竹中工務店</strong>：建物の面積・階数等10項目を入力すると、自社の過去案件DBから類似案件を提示・比較表生成。<strong>半日〜1日の作業を約15分に短縮</strong>。</li>
+              <li><strong>個人建築家のnote発信</strong>：Stable Diffusion + ControlNet + Inpaintで斜線制限対応ボリューム検討を実務化。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>AI出力は必ず一級建築士の目で確認。特に法規・構造の判断は最終責任者が承認。「ハルシネーション」（事実誤認）は構造分野で致命的。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C3 -->
+      <div class="cat-item" id="c3">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C3</span>
+            <span class="cat-q-title">法規・申請（建築基準法・条例）</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>案件ごとに自治体条例が違う、建蔽率・容積率の計算根拠を毎回調べ直す、確認申請のチェックに時間がかかる、用語集が頭の中。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>建築基準法・自治体条例から案件該当条文を即時抽出</li>
+              <li>用途地域別の建蔽率・容積率・斜線制限の計算根拠を整理</li>
+              <li>消防法・バリアフリー法を横断的に確認</li>
+              <li>建築用語・法規制まとめのチーム専用用語集生成</li>
+              <li>建築基準法チャットボット（24時間質問可）</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>NotebookLM</strong>（最有力）：建築基準法本文PDF・自治体条例PDFを投入し、「敷地は〇〇区××町、用途地域△△の場合の建蔽率は？」と日本語質問。<strong>2025年に改正建築基準法を読ませて社内シェア</strong>している実例あり（X上で公開）。<br>
+              <strong>Gemini Deep Research</strong>：最新の通達・指針の収集を高速化。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：e-Gov法令APIから法令XMLを取得し、ローカルRAGとして社内に構築。クライアント案件ごとの該当条文を自動抽出するスクリプトも作れる。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> NotebookLMに法令PDFを投入し質問（30分でセットアップ）。<br>
+              <span class="lvl-badge lv2">Lv2</span> 自治体条例の常時更新運用ルール化、社内共有Notebook。<br>
+              <span class="lvl-badge lv3">Lv3</span> 自前の建築基準法RAGチャットボット構築（GPT4All + LangChain でローカル運用＝API費用ゼロ、note記事に手順公開あり）。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>一級建築士・xx architecture（note）</strong>：GPT4All + LangChain + Streamlit/Gradioで「ローカル動作の建築基準法AIチャットボット」を実装。e-Gov APIからXML取得 → JSON整形 → RAG構築 → ローカルLLM連携の4ステップ。<strong>クラウドAPI費用ゼロ</strong>。</li>
+              <li><strong>NotebookLMで改正建築基準法読み込み社内シェア</strong>：X（旧Twitter）に複数の建築実務者から公開報告あり。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>AIの法規解釈は<strong>下調べ用</strong>。確認申請の最終判断は必ず一級建築士の責任。複雑な法令解釈・行政協議事項は専門家確認が必要。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C4 -->
+      <div class="cat-item" id="c4">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C4</span>
+            <span class="cat-q-title">施主・関係者コミュニケーション</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>議事録に時間がかかる、施主向けの説明が専門用語だらけになる、ヒアリングで聞き漏らす、似たような質問が繰り返し来る。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>打合せ録音 → 文字起こし → 議事録自動生成（決定事項・宿題・次回アクション抽出）</li>
+              <li>専門用語の平易化リライト（「躯体」→「建物の骨組み」など）</li>
+              <li>施主・協力会社・行政向けに文体を切り替えた書類（同じ内容を3バージョン）</li>
+              <li>ヒアリングの質問リスト精緻化（家族構成→潜在ニーズ予測）</li>
+              <li>来場予約・設計相談のLP説明文・キャッチコピー</li>
+              <li>住民ワークショップの議事から潜在ニーズ抽出</li>
+              <li>施主FAQ（坪単価・工期・補助金）に24時間自動応答</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>議事録</strong>：① Google Meet + Gemini自動文字起こし（2025年4月から日本語対応）→ ChatGPT/Geminiで要約整形。② Notta/tl;dv/Plaud Noteで録音→自動議事録。<br>
+              <strong>ChatGPT</strong>：施主向けリライト（プロンプト1行で文体変換）。FAQボットは ChatGPTのGPTs機能で構築可能。<br>
+              <strong>NotebookLM</strong>：ヒアリング記録50本を投入し「過去のヒアリングで漏れがちな質問は？」と問う。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：複数の議事録（録音→文字起こしテキスト）をフォルダごと読み込ませて、施主別・案件別の決定事項台帳を自動構築。GASでは難しい「過去全議事録の横断検索」が得意。<br>
+              <strong>GAS（Google Apps Script）</strong>：Gemini in Meet → 議事録 → タスクリスト自動登録のパイプラインを構築（Qiita等に実装例多数）。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> 議事録：Google Meet+Gemini（即時）。施主リライト：ChatGPT 1プロンプト。<br>
+              <span class="lvl-badge lv2">Lv2</span> 議事録テンプレ＋GPTs FAQ ボット構築。GAS自動化（要プログラミング知識）。<br>
+              <span class="lvl-badge lv3">Lv3</span> 施主専用LINEボット・自社WebサイトFAQボットの本格運用は外注推奨。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>建設現場の議事録AI化</strong>：2時間打合せで手書きA4×3枚→数日かかった議事録作成が、録音→文字起こし→AI整形で当日完成。施工管理業務で<strong>月20時間の残業削減</strong>。</li>
+              <li><strong>Geminiで議事録自動化</strong>：Google Meet 2025年4月から日本語文字起こしが標準機能化。中小建築事務所でも導入ハードル激減。</li>
+              <li><strong>GAS事例</strong>：Gemini in Meet→「次のステップ」をGoogleドキュメント自動生成→GASでタスク管理ツール連携（Qiitaに完全コード公開）。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>施主の個人情報を含む議事録は、Google Workspace Business Standard以上の<strong>学習データに使われない法人プラン</strong>を使う。ChatGPT個人版・無料版は不可。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C5 -->
+      <div class="cat-item" id="c5">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C5</span>
+            <span class="cat-q-title">契約・リスク管理</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>設計受託契約・工事監理契約のドラフトに時間がかかる、不利な条項を見落とす、海外の英文契約が読みづらい、資材高騰のリスク分析が手薄。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>設計受託契約・工事監理契約・特約事項のドラフト生成（弁護士監修テンプレを下敷きに）</li>
+              <li>受領した契約書から「不利な条項」を抽出（瑕疵担保責任の重さ・著作権帰属・解除条項）</li>
+              <li>海外プロジェクトの英文契約と日本語契約の対応条項比較</li>
+              <li>過去のトラブル事例から類似リスク予測</li>
+              <li>資材高騰・サプライチェーン停滞のシナリオ分析と代替策</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT</strong>：契約書PDF読み込み→「クライアント有利／受託者有利の条項を分類」「不利な条項に修正案」。<br>
+              <strong>NotebookLM</strong>：過去の自社契約書を全部投入し「うちの定型修正パターン」をベース化。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：契約書フォルダを丸ごと読ませて版間比較（v1→v2→v3でどこが変わったか）。AS資産の <code>/contract-check</code> スキルのようにExcel新旧対比表を自動生成可能。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTに契約書PDF＋立場（受託者）→ 不利条項チェック（10分）。<br>
+              <span class="lvl-badge lv2">Lv2</span> 自社の契約書テンプレを学習させた専用GPTs構築。<br>
+              <span class="lvl-badge lv3">Lv3</span> 顧問弁護士＋AI併用の契約レビューフロー設計（外注／弁護士相談）。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>LegalShift等の法務AI</strong>：NotebookLM + RAGで法令・判例を投入し、日々更新される情報に追随する運用が報告されている。</li>
+              <li><strong>AS自前スキル</strong>：<code>/contract-check</code>（立場別レビュー）・<code>/biz-contract</code>（業務委託契約自動生成）・<code>/doc-compare</code>（新旧対比）を建築事務所向けにカスタマイズ可能。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>AIの契約レビューは<strong>論点抽出までが限界</strong>。最終判断は弁護士に。守秘義務のある契約書はChatGPT個人版・無料版に入れない。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C6 -->
+      <div class="cat-item" id="c6">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C6</span>
+            <span class="cat-q-title">マーケ・集客・SNS発信</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>完成見学会の集客が伸びない、SNS発信が続かない、ブログ記事が書けない、建築写真のキャプションがワンパターン、設計思想を言語化できない。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>設計思想・施工事例の裏話をブログ記事化（音声録音→AI整文）</li>
+              <li>建築写真のInstagram/Pinterestキャプション（情緒的・物語性）</li>
+              <li>完成見学会の集客戦略（DMフローチャート・告知文）</li>
+              <li>来場予約・設計相談のLP説明文・キャッチコピー</li>
+              <li>「ZEH住宅」「リノベ」等のトレンドと自社の強みを掛け合わせたポジショニング案</li>
+              <li>メルマガ・LINE公式アカウントの月次配信テンプレ</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT</strong>：ブログ・SNS・メルマガの<strong>文体テンプレ</strong>を作って量産。<br>
+              <strong>Gemini + Google Workspace</strong>：Drive上の過去ブログを学習させて文体継承。<br>
+              <strong>画像生成AI（Midjourney/Stable Diffusion）</strong>：SNS用ヘッダー・アイキャッチ。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：過去のブログ記事フォルダ全部読ませて「うちの文体パターン」を抽出 → 新規ネタを音声録音テキスト渡しで一気にブログ化。AS資産の <code>/x-content-calendar</code> や <code>/multi-sns-sanbo</code> のように、月次カレンダー一括生成も可能。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTで1記事を5分でドラフト化（今日から）。<br>
+              <span class="lvl-badge lv2">Lv2</span> 月次SNSカレンダー＋投稿テンプレ化（誰でも投稿できる体制）。<br>
+              <span class="lvl-badge lv3">Lv3</span> SEO戦略・LP最適化・広告連携は外注 or マーケ専門の伴走支援。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>船井総研の設計事務所向け5活用</strong>：コラム制作・メルマガ作成・補助金業務対応・プロポーザル・バーチャルパースをChatGPTで実装する事例集。</li>
+              <li><strong>建築士のnote発信</strong>：個人建築家が「AIで週3本ブログ更新」運用に成功した報告複数。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>建築写真の著作権は自社／施主／施工会社の合意を確認。AIで生成した文章でも、施主の実例を載せる場合は許諾必須。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C7 -->
+      <div class="cat-item" id="c7">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C7</span>
+            <span class="cat-q-title">ビジュアル制作（パース・3D）</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>初期提案のパース作成に時間orコスト、内装比較資料が手作業、ウォークスルー動画は外注頼み。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>ラフスケッチ→フォトリアル完成予想図（ControlNetで線画から構成抽出→マテリアル付与）</li>
+              <li>テキストプロンプトのみで初期コンセプトイメージを数十パターン生成</li>
+              <li>建材・家具を組み合わせた内装比較カタログ自動生成</li>
+              <li>完成予想図（静止画）から建物内ウォークスルー動画</li>
+              <li>外構・植栽・周辺環境のバリエーション提示</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>Midjourney</strong>：アートスタイルに優れる。初期提案・コンセプトイメージ向き。<br>
+              <strong>Stable Diffusion + ControlNet</strong>：図面・スケッチから精度の高いパース生成。Inpaintで部分書き換え。<br>
+              <strong>PersGPT・Veras・Sloyd・Spacely</strong>：建築特化AIパースサービス（日本国内サービスも複数）。<br>
+              <strong>Adobe Firefly</strong>：商用利用OK・著作権リスク低い。<br>
+              <strong>RunwayML / Pika / Sora</strong>：静止画→動画化（ウォークスルー風）。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：直接の画像生成は得意ではないが、複数の生成画像を整理・命名・比較表化する後工程に強い。プロンプト管理スクリプトも書ける。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> Midjourney月$10で1日30枚生成（即日着手可）。<br>
+              <span class="lvl-badge lv2">Lv2</span> Stable Diffusion + ControlNet ローカル運用（独学2〜4週間、GPU必要 or クラウド利用）。<br>
+              <span class="lvl-badge lv3">Lv3</span> 自社過去案件で学習させた専用モデル（LoRA訓練）は外注推奨。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>パース外注コスト50〜80%削減</strong>：工務店・設計事務所が初期提案・デザインスタディをAIパース「内製化」に置換した事例多数。</li>
+              <li><strong>大規模オフィスビル設計</strong>：AIで初期案を短時間で数十種類生成し、クライアントとのブレストに活用。プロジェクト方向性を早期に決定。</li>
+              <li><strong>株式会社シェルパ（福岡）</strong>：建築CGパース／AIパース／VR制作の自社サービスとしてAI活用ノウハウ発信。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>初期提案・社内検討用と、施主提示用・公的提出用は品質基準が違う。後者はまだ人手の修正・専門パース会社との併用が現実的。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C8 -->
+      <div class="cat-item" id="c8">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C8</span>
+            <span class="cat-q-title">CAD・データ自動化・BIM</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>CADの単純作業（建具表・面積計算・凡例配置）が多い、ExcelやVBA資産がレガシー、BIM移行時のスクリプト書き換え、毎案件で同じことを繰り返している。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>AutoCAD用LISP/LSPスクリプト生成（図形描画・属性設定の自動化）</li>
+              <li>Rhino + Grasshopper のPython/C#スクリプト生成</li>
+              <li>Excel建具表・面積計算の自動化マクロ（VBA→Python移植）</li>
+              <li>パラメトリック設計で法規制・構造制約を満たす案の自動生成</li>
+              <li>過去の計算ツール・設計プログラムをBIMソフト用に書き換え</li>
+              <li>土地の周辺環境・統計データを統合した敷地分析</li>
+              <li>ランニングコスト・光熱費の竣工後シミュレーション</li>
+              <li>BIMモデルから建具表・面積表を自動出力</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT</strong>：AutoCAD LISP・Rhino Python・Excel VBAのコード生成。AS実例：ロゴ画像→AutoCADスクリプト生成は約60回のフィードバックで実用化（アサミ情報システム公開事例）。<br>
+              <strong>ACIMUS（ChatBIM）</strong>：自然言語でフロアプラン自動提案→AutoCAD/Revit/ArchiCADへ属性保持で連携。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：複数CADファイル（DXF/DWG）の解析と書き換えを並列処理。VBAコード資産（数百個のマクロ）を一括でPython移植するのも得意。AS資産の <code>/skill-craft</code> でCAD自動化スキルを建築事務所専用にカスタム化可能。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTにExcel関数を作らせる（即日）。<br>
+              <span class="lvl-badge lv2">Lv2</span> AutoCAD LISP・Rhino Pythonの自動化スクリプト（試行錯誤2〜4週間）。<br>
+              <span class="lvl-badge lv3">Lv3</span> BIMモデル自動生成・パラメトリック設計の本格運用は外注 or 専門家。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>アサミ情報システム</strong>：ChatGPTでAutoCADスクリプト生成を実務化。試行錯誤60回でロゴ→図形描画が安定動作。</li>
+              <li><strong>ACIMUS</strong>：日本発のChatBIMサービス。AI自動プランニング機能でフロアプランを数分自動生成→Revit/ArchiCADへ連携。</li>
+              <li><strong>個人建築家のnote</strong>：「AIが建築設計ツールを操作」（GUI自動化）の実装報告。</li>
+              <li><strong>キャド研</strong>：AIで製図・設計データを作る2026年版ガイド公開。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>生成されたスクリプトは小規模なテストデータで必ず検証。本番図面で初回実行は厳禁。バージョン管理（git）を導入推奨。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C9 -->
+      <div class="cat-item" id="c9">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C9</span>
+            <span class="cat-q-title">ナレッジ・教育・属人化解消</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>代表の頭の中にしかルールがない、新人の質問対応に時間がかかる、過去の設計事例が探せない、CAD操作の教育がOJT頼み。職員3名だからこそ<strong>属人化リスクが致命的</strong>。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>設計ルール・CAD操作手順・確認申請の進め方マニュアル自動化</li>
+              <li>新人向け「図面の読み方」「建築基準法入門」のマニュアル生成</li>
+              <li>施主との打合せ・現場調整のロールプレイ型教材</li>
+              <li>過去の設計事例・工法の疑問に24時間答える社内チャットボット</li>
+              <li>所内のメール・議事録・図面コメントを全部学習させた「うちの代表が頭の中に持っている答え」を可視化</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>NotebookLM</strong>（最強）：過去の議事録・設計事例・マニュアル類を100本投入し、「過去の類似案件で代表が判断したパターン」を質問形式で取り出す。<br>
+              <strong>ChatGPT GPTs</strong>：社内専用FAQボットを作って共有。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：社内ファイル全部（フォルダ単位）を読ませて、ナレッジMAPやマニュアルを自動生成。AS資産の <code>/knowledge-craft</code> のように、代表の頭の中の知識を体系化したナレッジMD＋HTMLマニュアルを作成可能。<br>
+              <strong>独自RAGチャットボット</strong>：施主専用・社員専用・現場専用に分けて運用（外注時はDify、Mastra、LangChain等で実装）。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> NotebookLMに社内PDFを入れて社員が質問（30分セットアップ）。<br>
+              <span class="lvl-badge lv2">Lv2</span> ChatGPT GPTs で社内FAQボットを構築・チームに共有。<br>
+              <span class="lvl-badge lv3">Lv3</span> 自社サーバー or クラウドにRAG基盤を構築・社員ログイン制限・更新ワークフロー（外注）。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>清水建設</strong>：若手の業務支援・技術継承で<strong>RAG</strong>を活用。自社施工マニュアルを基に、若手の専門質問に自動回答するツールを開発。2025年4月から設計・施工管理社員が利用開始。</li>
+              <li><strong>竹中工務店</strong>：若手の構造設計支援AIで<strong>半日〜1日の作業を15分に短縮</strong>。</li>
+              <li><strong>大成建設・清水建設・竹中工務店</strong>等が若手育成にAIを活用する事例8選（日経クロステック）。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>「代表の頭の中」を可視化するプロセスは、代表の<strong>時間投入</strong>と<strong>整理整頓</strong>が前提。AIに過去ファイルを丸投げしても、整理されていない素材からは整理された答えは出ない。</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- C10 -->
+      <div class="cat-item" id="c10">
+        <button class="cat-q" type="button" aria-expanded="false">
+          <span class="cat-q-label">
+            <span class="cat-q-num">C10</span>
+            <span class="cat-q-title">経営・戦略</span>
+          </span>
+          <span class="cat-q-mark" aria-hidden="true">＋</span>
+        </button>
+        <div class="cat-a">
+          <table class="cat-detail-table">
+            <tr><th>誰の悩み？</th><td>新規事業の種が見つからない、スケジュール組みが属人化、外部環境変化への対応が後手、最新の素材・工法のキャッチアップが追いつかない。</td></tr>
+            <tr><th>具体ユースケース</th><td><ul>
+              <li>空き家再生・PFI事業参入・モジュール建築の市場ニーズ分析とビジネスモデル設計</li>
+              <li>基本設計→実施設計→監理の工期データから最適スケジュール案</li>
+              <li>最新の建材・省エネ性能・補助金情報を継続リサーチして提案資料化</li>
+              <li>法規制変化・建設資材高騰・地政学リスクの多角的分析と対策</li>
+              <li>SWOT・3C・5Force等のフレームワークでの自社ポジショニング分析</li>
+            </ul></td></tr>
+            <tr><th>推奨ツール（A群）</th><td>
+              <strong>ChatGPT (Plus/Team)</strong>：戦略フレームワークでの分析・新規事業ブレスト。<br>
+              <strong>Gemini Deep Research</strong>：最新の市場データ・補助金情報を高速リサーチ。<br>
+              <strong>NotebookLM</strong>：業界レポートPDF20本投入→トレンド要約。
+            </td></tr>
+            <tr><th>推奨ツール（B群）</th><td>
+              <strong>Claude Codeデスクトップ</strong>：過去案件のPL/見積データを横断分析。AS資産の <code>/profit-plan</code>（EPDCAR/EOODAR）・<code>/finance</code>（DCF・損益分岐）・<code>/issue-tree</code>（イシューツリー）・<code>/research-proposal</code>（ベンチマーク→自社転用）等のスキルを建築事務所向けにカスタム化可能。
+            </td></tr>
+            <tr><th>難易度</th><td>
+              <span class="lvl-badge lv1">Lv1</span> ChatGPTに「うちの強み3つで参入可能な新規事業10案」（30分）。<br>
+              <span class="lvl-badge lv2">Lv2</span> 月次の業界トレンド要約をNotebookLMで運用化。<br>
+              <span class="lvl-badge lv3">Lv3</span> 経営参謀AI（数値・市場・競合・自社データ統合）の本格構築は外注 or 専門コンサル併用。
+            </td></tr>
+            <tr><th>日本国内の事例</th><td><ul>
+              <li><strong>清水建設</strong>：AIで建設コストと省エネ性能を同時評価して<strong>ZEB化計画を最適化</strong>する脱炭素コンサル事業を2025年12月開始。</li>
+              <li><strong>日建設計＋ソフトバンク</strong>：データ活用で自律進化するスマートビル「SynapSpark株式会社」を設立。</li>
+              <li><strong>竹中工務店＋DATAFLUCT</strong>：ビル管理用生成AIアプリ。人流データ・IoTデータを自然言語で分析・可視化。</li>
+            </ul></td></tr>
+            <tr><th>注意点</th><td>市場データ・補助金情報は<strong>必ず一次情報で再確認</strong>。AIは2〜3ヶ月遅れ、補助金は今日の話。</td></tr>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 03 / TOOLS ===== -->
+<section class="section alt-bg" id="tools">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">03 / TOOLS</span>
+      <h2>ツール群の選び方（汎用AI vs Claude Code）</h2>
+    </div>
+    <p class="section-lead">
+      職員3名の建築事務所では、<strong>「両方使う」</strong>のが現実解。それぞれ得意分野が違うので、どちらか一方では片手落ちになります。月額コスト・導入手間・運用イメージを比較して、自社の状況に合った組み合わせを選んでください。
+    </p>
+
+    <div class="tool-grid">
+
+      <!-- Group A -->
+      <div class="tool-card group-a">
+        <div class="tool-label">GROUP A</div>
+        <div class="tool-name">汎用AI（ChatGPT＋Google Workspace）</div>
+        <div class="tool-price">月額 約4,000〜6,000円／人 <small>＋ChatGPT Plus等</small></div>
+        <p class="tool-desc">
+          ブラウザ・モバイルアプリから即使える汎用ツール群。導入のハードルが極めて低く、職員全員がすぐ使い始められる。日常業務の8割をカバー。
+        </p>
+
+        <h5>含まれる主なツール</h5>
+        <ul>
+          <li>ChatGPT Plus（$20/月）or Team（$25/人/月）：チャット・文書・コード</li>
+          <li>Gemini for Google Workspace：Meet/Docs/Driveに統合</li>
+          <li>NotebookLM：社内PDF・議事録の専用Q&A基盤</li>
+          <li>Google Apps Script（GAS）：Workspaceの自動化（無料）</li>
+          <li>Stable Diffusion / Midjourney：パース・コンセプト画像</li>
+        </ul>
+
+        <h5>得意分野</h5>
+        <ul>
+          <li>議事録・施主向けリライト・SNS発信（C4, C6）</li>
+          <li>NotebookLMで法令・社内ナレッジRAG（C3, C9）</li>
+          <li>Geminiの会議文字起こし・Meet統合（C4）</li>
+          <li>GASでGmail・カレンダー・Drive自動化（C4, C9）</li>
+        </ul>
+
+        <h5>苦手分野</h5>
+        <ul>
+          <li>ローカルファイル（数百個のDWG/DXF）の横断処理</li>
+          <li>独自スクリプト・CAD自動化の本格開発</li>
+          <li>機密性が高く外部送信できない案件</li>
+        </ul>
+
+        <div class="tool-verdict">
+          <strong>向いている事務所：</strong>「まずAIを試してみたい」「日常業務の議事録・リライト・SNSから着手したい」「全職員がブラウザだけで使える状態にしたい」。<strong>導入の第一歩はここから。</strong>
+        </div>
+      </div>
+
+      <!-- Group B -->
+      <div class="tool-card group-b">
+        <div class="tool-label">GROUP B</div>
+        <div class="tool-name">Claude Codeデスクトップアプリ</div>
+        <div class="tool-price">月額 約$20〜$100／人 <small>Pro/Max プラン</small></div>
+        <p class="tool-desc">
+          ローカルPC上でフォルダごとファイルを読み込んで処理する開発者向けAIツール。建築事務所では「過去案件フォルダ横断」「CADスクリプト生成」「独自スキル開発」に圧倒的な強みを発揮。
+        </p>
+
+        <h5>主な機能</h5>
+        <ul>
+          <li>ローカルファイルへの直接アクセス（DWG/DXF/PDF/Excel）</li>
+          <li>長文・複数ファイル横断の高精度処理</li>
+          <li>独自スキル・カスタムワークフロー開発</li>
+          <li>サブエージェントによる並列処理</li>
+          <li>Git連携でバージョン管理付き運用</li>
+        </ul>
+
+        <h5>得意分野</h5>
+        <ul>
+          <li>過去案件フォルダから「うちの文体・パターン」を抽出（C1, C6, C9）</li>
+          <li>CADスクリプト・Excel自動化・VBA→Python移植（C8）</li>
+          <li>契約書の版間比較・多面的レビュー（C5）</li>
+          <li>社内ナレッジを丸ごと体系化したマニュアル自動生成（C9）</li>
+          <li>カスタムスキル（業務テンプレ）を作って社内共有（全カテゴリ）</li>
+        </ul>
+
+        <h5>苦手分野・前提</h5>
+        <ul>
+          <li>コマンドライン的UIに慣れが必要（最初は学習コスト）</li>
+          <li>Web画面のチャット型UIではない</li>
+          <li>画像生成は別ツールと組み合わせ前提</li>
+        </ul>
+
+        <div class="tool-verdict">
+          <strong>向いている事務所：</strong>「過去案件のナレッジを資産化したい」「CAD・Excel自動化を本気でやりたい」「機密案件は社外に出したくない」。<strong>使いこなしの上限が高く、長期的なROIが大きい。</strong>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>2軸の組み合わせ：推奨パターン</h3>
+    <table class="cat-detail-table">
+      <tr>
+        <th>パターン①</th>
+        <td><strong>最小構成（月7,000円〜／人）</strong>：Google Workspace Business Standard（Gemini込み）＋ChatGPT個人プラン or 共用Team。<br>議事録・施主リライト・SNSから着手。全職員が即日使える。</td>
+      </tr>
+      <tr>
+        <th>パターン②</th>
+        <td><strong>推奨構成（月15,000円〜／人）</strong>：パターン①＋Claude Code Pro（代表のみ）。<br>代表がClaude Codeで「うちの典型業務」をスキル化し、汎用AIから呼び出せる状態を作る。</td>
+      </tr>
+      <tr>
+        <th>パターン③</th>
+        <td><strong>本格構成（月25,000円〜／人）</strong>：パターン②＋全員Claude Code＋外注で独自RAGチャットボット。<br>属人化解消・新人即戦力化を本気でやる。投資3〜6ヶ月で回収を狙う。</td>
+      </tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 04 / LEVELS ===== -->
+<section class="section" id="levels">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">04 / LEVELS</span>
+      <h2>レベル別ロードマップ（初心者 → 中級 → 上級/外注）</h2>
+    </div>
+    <p class="section-lead">
+      職員3名の事務所が、無理なく段階的に拡張していくロードマップ。<strong>急がば回れ。Lv1を3ヶ月運用してからLv2へ。</strong>
+    </p>
+
+    <div class="level-grid">
+
+      <div class="level-card lv1">
+        <span class="level-tag">LEVEL 1</span>
+        <h4>初心者〜中級者：今日〜1週間</h4>
+        <p class="timeline">プロンプト1個で完結する単発タスク。導入コスト＝ChatGPT Plus 月$20。</p>
+        <p class="level-desc">
+          「AI、結構使えるな」を全員が体験する段階。失敗してもリスクなし。
+        </p>
+        <ul>
+          <li>議事録：録音→ChatGPT/Geminiで5分整形</li>
+          <li>施主向けリライト：「専門用語を中学生向けに」プロンプト</li>
+          <li>メール下書き：宛先・要件を箇条書き→ChatGPTで整形</li>
+          <li>SNSキャプション：写真説明→情緒的な3パターン</li>
+          <li>ブログ記事ドラフト：音声録音→AI整文</li>
+          <li>契約書ざっくりチェック：PDF→「不利な条項を抽出」</li>
+        </ul>
+      </div>
+
+      <div class="level-card lv2">
+        <span class="level-tag">LEVEL 2</span>
+        <h4>中級〜上級者：1〜3ヶ月</h4>
+        <p class="timeline">定型ワークフロー化・チーム共有。投資＝Workspace Standard＋ChatGPT Team＋Claude Code Pro（代表のみ）。</p>
+        <p class="level-desc">
+          属人化を解消し「誰でも同じ品質」を目指す段階。AS資産（業務スキル）が威力を発揮。
+        </p>
+        <ul>
+          <li>NotebookLM社内ナレッジ：過去案件・法令・マニュアルRAG化</li>
+          <li>GPTs / Claude スキル：社内専用ボット（議事録・リライト・契約レビュー）</li>
+          <li>Google Meet＋Gemini自動議事録＋GASでタスク連携</li>
+          <li>Stable Diffusion + ControlNetでパース内製化</li>
+          <li>Claude Codeで月次SNSカレンダー・ブログ量産パイプライン</li>
+          <li>建築基準法NotebookLMを案件着手時に必ず参照する運用</li>
+        </ul>
+      </div>
+
+      <div class="level-card lv3">
+        <span class="level-tag">LEVEL 3</span>
+        <h4>上級または外注：3ヶ月〜</h4>
+        <p class="timeline">本格的なシステム化。投資＝50万〜数百万円（外注内容次第）。</p>
+        <p class="level-desc">
+          「うちの事務所だけのAI基盤」を持つ段階。競合との明確な差別化、新規受注の武器化。
+        </p>
+        <ul>
+          <li>独自RAGチャットボット（建築基準法＋社内ノウハウ）社内・施主双方向</li>
+          <li>CAD自動化（AutoCAD LISP / Rhino Python / Grasshopper）の本格スクリプト群</li>
+          <li>BIM×AI連携（ACIMUSや独自Revit/ArchiCADプラグイン）</li>
+          <li>パラメトリック設計＋法規・構造シミュレーション</li>
+          <li>建材・補助金・市場データを統合した経営参謀AI</li>
+          <li>施主LP・SEO・広告連携の総合マーケAI</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== 05 / QUICKSTART ===== -->
+<section class="section alt-bg" id="quickstart">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">05 / QUICKSTART</span>
+      <h2>3名事務所が明日から始める3STEP</h2>
+    </div>
+    <p class="section-lead">
+      Lv1の中から、<strong>最も投資対効果が高く、3名全員が一気に楽になる</strong>3つを抽出しました。この順に1週間ずつ試すだけで、月20〜30時間の業務時間が浮きます。
+    </p>
+
+    <div class="step-list">
+
+      <div class="step-item">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h4>議事録AIを1案件で試す（今週）</h4>
+          <div class="step-meta">
+            <span>所要時間 30分</span>
+            <span>コスト 0円（無料枠）</span>
+            <span>担当 代表 or 1名</span>
+          </div>
+          <p>
+            次の施主打合せ・現場定例を録音し、Notta無料枠 or Plaud Note無料枠で文字起こし。テキストをChatGPT（個人プラン or Gemini無料）に貼って「決定事項・宿題・次回までのアクションを抽出」と指示。
+          </p>
+          <ul>
+            <li><strong>期待効果：</strong>2時間打合せ→議事録作成3時間が、AI整形15分に。<strong>1案件あたり2〜3時間削減</strong>。</li>
+            <li><strong>注意：</strong>施主名・個人情報を含むため、必ずGoogle Workspace法人版／ChatGPT Plus以上のオプトアウト設定で実行。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h4>NotebookLMに過去案件PDFを20本投入（来週）</h4>
+          <div class="step-meta">
+            <span>所要時間 1時間</span>
+            <span>コスト 0円（Google アカウントのみ）</span>
+            <span>担当 代表</span>
+          </div>
+          <p>
+            <a href="https://notebooklm.google.com/" target="_blank" rel="noopener">notebooklm.google.com</a> にログインし、過去の設計図書・仕様書・建築基準法PDF・自治体条例PDFを20〜50本投入。新規案件で「○○区××用途地域での建蔽率は？」「うちの過去案件で〇〇の対応はどうしたか？」と日本語で問える状態に。
+          </p>
+          <ul>
+            <li><strong>期待効果：</strong>「あの案件のあの判断、どうしたっけ？」が即解決。代表の頭の中の8割が可視化。</li>
+            <li><strong>応用：</strong>新人にNotebookLMだけ渡して「OJTの質問の半分を代行」する運用が可能に。</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h4>施主向けリライト・SNS発信を週次定型化（再来週）</h4>
+          <div class="step-meta">
+            <span>所要時間 月2時間</span>
+            <span>コスト ChatGPT Plus $20/月</span>
+            <span>担当 代表＋1名</span>
+          </div>
+          <p>
+            ChatGPTにプロンプトテンプレを2本登録（A：施主向けリライト用、B：SNS/ブログ用）。週1回30分の運用ミーティングで、その週の打合せメモから「施主向け返信」「SNS投稿2本」「ブログ1本」をAIに生成させ、人手で30分仕上げ。
+          </p>
+          <ul>
+            <li><strong>期待効果：</strong>SNS発信が止まっていた事務所が、週次定期発信に復活。完成見学会の集客に寄与。</li>
+            <li><strong>応用：</strong>運用が回ったらClaude Code（または外注）でスキル化し、テンプレを「自社の文体に学習」させる。</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <p style="margin-top:24px; font-size:14px; color:#555;">
+      ※ 上記3STEPで <strong>月15〜30時間の業務時間が浮き</strong>、その時間を「コンセプト立案」「現場対応」「新規受注の営業」など、AIでは置き換えられない高付加価値業務に振り向けられます。
+    </p>
+  </div>
+</section>
+
+<!-- ===== 06 / CASES ===== -->
+<section class="section" id="cases">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">06 / CASES</span>
+      <h2>日本国内の建築・建設業AI活用事例集（2025-2026）</h2>
+    </div>
+    <p class="section-lead">
+      大手の事例から、小規模事務所が真似できる範囲を抜き出しました。出典リンクは末尾に集約。
+    </p>
+
+    <div class="case-grid">
+
+      <div class="case-card">
+        <div class="case-source">CASE / GENERAL CONTRACTOR</div>
+        <h4>竹中工務店：構造設計支援AI＋面談支援＋ビルマネ生成AI</h4>
+        <div class="case-detail">
+          建物の面積・階数等10項目を入力 → 自社案件DBから類似案件を提示・比較表生成。<strong>半日〜1日の作業を約15分に短縮</strong>。別に管理職向け面談支援AI、ビル管理用生成AIアプリも展開。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">構造設計</span>
+          <span class="case-tag">RAG</span>
+          <span class="case-tag">15分／日単位の時短</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / GENERAL CONTRACTOR</div>
+        <h4>清水建設：施工マニュアルRAGで若手の質問自動回答</h4>
+        <div class="case-detail">
+          検索＋生成AI（RAG）で社内施工マニュアル基盤を構築。若手の専門質問に自動回答。<strong>2025年4月から設計・施工管理社員が利用開始</strong>。AIで建設コストと省エネ性能を同時評価するZEB化計画支援も。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">RAG</span>
+          <span class="case-tag">技術継承</span>
+          <span class="case-tag">ZEB</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / GENERAL CONTRACTOR</div>
+        <h4>大林組：構造設計支援AIプログラム（断面設計自動化）</h4>
+        <div class="case-detail">
+          構造設計の「断面設計」自動化。RC造・混合構造へ順次展開予定。設計プロセス全体でのAI活用を促進。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">構造設計</span>
+          <span class="case-tag">自動化</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / DESIGN OFFICE</div>
+        <h4>隈研吾建築都市設計事務所：Midjourneyを「避ける基準」に</h4>
+        <div class="case-detail">
+          画像生成AI「Midjourney」を設計支援に活用。過去作品に似たデザインを<em>あえて生成させ</em>、その既存パターンを<strong>避ける基準</strong>にすることで、所員が既存の枠を超えた創造に挑む環境を構築。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">Midjourney</span>
+          <span class="case-tag">設計支援</span>
+          <span class="case-tag">創造性向上</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / INDEPENDENT ARCHITECT</div>
+        <h4>一級建築士の個人発信：ローカルLLMで建築基準法AIチャットボット</h4>
+        <div class="case-detail">
+          GPT4All + LangChain + Streamlit/Gradioでローカル動作のチャットボット構築。e-Gov APIから法令XML取得→JSON整形→RAG構築の4ステップで実装。<strong>クラウドAPI費用ゼロ</strong>。小規模事務所でも真似可能なステップ公開。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">ローカルLLM</span>
+          <span class="case-tag">建築基準法</span>
+          <span class="case-tag">RAG</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / SaaS</div>
+        <h4>ACIMUS：日本発のChatBIM「自動プランニング」</h4>
+        <div class="case-detail">
+          建物用途を問わずフロアプラン（間取り）をAIが数分で自動提案。生成プランからRevit/ArchiCADへ属性情報保持で連携。中小設計事務所の初期検討フェーズで即戦力。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">ChatBIM</span>
+          <span class="case-tag">Revit連携</span>
+          <span class="case-tag">ArchiCAD連携</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / CONSTRUCTION SITE</div>
+        <h4>建設現場の議事録AI化：月20時間の残業削減</h4>
+        <div class="case-detail">
+          2時間打合せで手書きA4×3枚→数日かかった議事録作成が、録音→文字起こし→AI整形で当日完成。<strong>施工管理業務で月20時間の残業削減</strong>。空いた時間を品質確認・住民対応に振り向け。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">議事録AI</span>
+          <span class="case-tag">月20h削減</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / DESIGN PERSPECTIVE</div>
+        <h4>パース内製化でコスト50〜80%削減</h4>
+        <div class="case-detail">
+          工務店・設計事務所が、初期提案・デザインスタディをAIパース「内製化」に置換。<strong>従来のパース外注コストを50〜80%削減</strong>。大規模オフィスビル設計でAI数十パターン生成→クライアントブレストに活用→方向性早期決定の事例も。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">Midjourney</span>
+          <span class="case-tag">Stable Diffusion</span>
+          <span class="case-tag">コスト50-80%減</span>
+        </div>
+      </div>
+
+      <div class="case-card">
+        <div class="case-source">CASE / CAD AUTOMATION</div>
+        <h4>アサミ情報システム：ChatGPTでAutoCADスクリプト</h4>
+        <div class="case-detail">
+          ロゴ画像を読み込ませてAutoCADスクリプト生成。初回は多発するエラーを、約<strong>60回のフィードバック</strong>で改善し実用化。AutoCAD特有の仕様を具体的に伝える＝プロンプトテクニック。
+        </div>
+        <div class="case-tags">
+          <span class="case-tag">AutoCAD</span>
+          <span class="case-tag">LISP生成</span>
+        </div>
+      </div>
+
+    </div>
+
+    <h3>事例まとめの示唆</h3>
+    <ul>
+      <li>大手は<strong>RAG（社内ナレッジ＋AI）</strong>と<strong>構造設計自動化</strong>に投資が集中。</li>
+      <li>小規模事務所・個人建築家は<strong>ChatGPT/NotebookLM/画像生成AI</strong>を組み合わせて、月10〜30時間の時短を実現している。</li>
+      <li>建築基準法RAGはローカルLLMでも実装可能（クラウドAPI不要）の事例あり。</li>
+      <li>議事録AI・パース内製化は<strong>3名事務所でも即効果が出る</strong>領域。</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ===== 07 / FAQ ===== -->
+<section class="section alt-bg" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">07 / FAQ</span>
+      <h2>よくある質問</h2>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. CADと連携できますか？</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        AutoCAD（LISP/Python）、Rhinoceros（Python/C#）、Vectorworks（Pascal/Python）、Revit/ArchiCAD（API・プラグイン）は、いずれもChatGPTやClaude Codeでスクリプト生成可能。実務でロゴ→AutoCADスクリプト化を約60回の試行で安定動作させた事例あり。本格的なBIM連携はACIMUSのようなChatBIM SaaSも選択肢。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. 個人情報・施主情報をAIに入れて大丈夫？</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        <strong>絶対NG：</strong>ChatGPT無料版・個人版（学習データに使われる可能性）。<br>
+        <strong>OK：</strong>ChatGPT Plus / Team / Enterprise（オプトアウト設定）、Google Workspace Business Standard以上のGemini（法人版は学習に使われない契約）、Claude Codeデスクトップ（ローカル処理）。社外秘案件は<strong>Claude Codeデスクトップ＋ローカルLLM</strong>が最も安全。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. 導入の月額目安は？（3名事務所）</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        <strong>最小：月2.1万円</strong>＝Google Workspace Business Standard（1,800円/人/月×3）＋ChatGPT Plus（$20×1）。<br>
+        <strong>推奨：月4.5万円</strong>＝上記＋Claude Code Pro（代表のみ）＋画像生成AI（Midjourney $10）。<br>
+        <strong>本格：月8〜10万円</strong>＝全員Claude Code＋NotebookLM Plus＋外注のRAG運用。<br>
+        Lv1運用で月20時間×3名＝60時間／月の時短が出れば、人件費換算で月20〜40万円の効果。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. 職員3名で誰が運用しますか？</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        Lv1（1〜3STEP）は<strong>3名全員が今週から</strong>。Lv2（NotebookLM・GPTs構築）は<strong>代表＋1名で月2時間ずつ</strong>。Lv3（独自スキル開発・本格RAG）は<strong>代表のみ or 外注</strong>。最初から「専任のAI担当」を置く必要はなく、業務の中で自然に運用する方が定着する。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. ハルシネーション（事実誤認）が心配です。</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        正しい心配です。対策は3つ：<br>
+        ① <strong>RAG型（NotebookLM・独自RAG）</strong>は「入れた資料の範囲」でしか答えないので、ハルシネーションが激減。<br>
+        ② <strong>法規・構造・契約</strong>は必ず一級建築士・弁護士が最終確認。AIは下調べの効率化ツール。<br>
+        ③ <strong>出典確認</strong>をプロンプトに必ず含める（「出典元の条文番号も明記」など）。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. 既存のGoogleやMicrosoft環境で十分？</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        <strong>日常業務（議事録・リライト・SNS・社内Q&A）はGoogle Workspace Business Standard＋Geminiでほぼカバー</strong>できます。ただし、過去案件フォルダの横断処理・CAD自動化・独自スキル開発はClaude Codeが圧倒的に強い。<strong>2軸併用が最適解</strong>。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. うちの事務所はAutoCAD中心ですが、BIM未導入です。それでもAI活用できますか？</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        できます。BIM導入とAI導入は<strong>独立した投資判断</strong>。AutoCAD前提でも、議事録・リライト・SNS・契約レビュー・建築基準法RAG・コンセプト立案は全部使える（C1, C3, C4, C5, C6, C9, C10）。BIMを将来導入する場合、Claude CodeでVBA資産→Python移植の支援も可能。
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" type="button" aria-expanded="false">
+        <span>Q. 学習に割ける時間が職員1人あたり週1時間しかありません。</span>
+        <span class="mark" aria-hidden="true">＋</span>
+      </button>
+      <div class="faq-a">
+        十分です。Lv1の3STEPは1人あたり<strong>合計2〜3時間で習得可能</strong>。むしろ「集中学習」より「実業務で1日1回使う」方が定着率が圧倒的に高い。最初の1ヶ月は「議事録AIだけ徹底」など対象を絞るのがコツ。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact-box" id="contact">
+  <div class="container">
+    <h2>次のヒアリングで確認したい7項目</h2>
+    <p>本資料はチャプロ社カタログ＋日本国内の事例リサーチから作成しました。<br>御社固有の状況をヒアリングして、最適な3STEPを提案させていただきます。</p>
+
+    <div class="checklist">
+      <h4>HEARING CHECKLIST</h4>
+      <ul>
+        <li>使用CAD・BIMソフト（AutoCAD / Vectorworks / ArchiCAD / Revit / Jw_cad など）</li>
+        <li>情報基盤（Google Workspace / Microsoft 365 / その他）と既存AI利用経験</li>
+        <li>主な案件種別（住宅 / RC集合 / 非住宅 / 公共 / リノベ / 確認申請代行）</li>
+        <li>一番時間がかかっている業務（議事録 / 図面チェック / プレゼン / 確認申請 / etc.）</li>
+        <li>属人化している業務（代表しかできない作業の特定）</li>
+        <li>AI導入予算（月額・初期費用）と期待する成果（時短 / 品質 / 新規事業）</li>
+        <li>学習に割ける時間（職員1人あたり週何時間）</li>
+      </ul>
+    </div>
+
+    <div class="cta-group">
+      <a href="mailto:uemura@artsoul.jp?subject=建築事務所AI活用_ヒアリング希望" class="cta-btn primary inverse">メールで相談する</a>
+      <a href="#categories" class="cta-btn ghost">10カテゴリに戻る</a>
+    </div>
+
+    <p style="margin-top:32px; font-size:13px; opacity:0.85;">
+      無料相談：所要60分・オンライン or 訪問・売り込み一切なし。<br>
+      担当：有限会社アートソウル 上村桂右
+    </p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <p class="company">有限会社アートソウル AS AI導入支援事業</p>
+    <p>
+      担当：上村桂右<br>
+      Mail：uemura@artsoul.jp<br>
+      本資料：建築設計事務所のためのAI活用マップ v1.0（2026-06-03作成）
+    </p>
+
+    <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:32px; font-size:14px;">主な出典・参考リンク</h3>
+    <ul class="sources-list" style="color:#c8d8cc;">
+      <li>原典PDF：チャプロ（生成AIプロンプト研究所）「建築事務所のための生成AI活用法」（11ページ）</li>
+      <li><a href="https://civil-web.com/media/kensetugyou-chatgpt/" target="_blank" rel="noopener" style="color:#B8E5C5;">Civil-web：建設業ChatGPT活用法｜事例とプロンプトを紹介</a></li>
+      <li><a href="https://tsk-p.blog/" target="_blank" rel="noopener" style="color:#B8E5C5;">tsk-p base：建設業でChatGPTを使い倒す！議事録・報告書・工程表の効率化術</a></li>
+      <li><a href="https://thebridge.co.jp/meeting-minutes-ai/" target="_blank" rel="noopener" style="color:#B8E5C5;">THE BRIDGE：建設現場の議事録をAIで自動化</a></li>
+      <li><a href="https://www.funaisoken.co.jp/dl-contents/industry-ai-design_S062" target="_blank" rel="noopener" style="color:#B8E5C5;">船井総合研究所：設計事務所向けChatGPT・AI活用事例5選</a></li>
+      <li><a href="https://andpad.jp/columns/0237" target="_blank" rel="noopener" style="color:#B8E5C5;">アンドパッド：建設業ChatGPT活用方法・注意点</a></li>
+      <li><a href="https://xtech.nikkei.com/atcl/nxt/column/18/03244/061900007/" target="_blank" rel="noopener" style="color:#B8E5C5;">日経クロステック：「建築×生成AI」で新サービス続々、チャットでBIMモデル作成</a></li>
+      <li><a href="https://xtech.nikkei.com/atcl/nxt/column/18/03045/021000006/" target="_blank" rel="noopener" style="color:#B8E5C5;">日経クロステック：大成・清水・竹中…若手育成で広がるAI活用8選</a></li>
+      <li><a href="https://www.takenaka.co.jp/solution/disaster/designai/" target="_blank" rel="noopener" style="color:#B8E5C5;">竹中工務店：構造設計AIシステム</a></li>
+      <li><a href="https://www.nikkei.com/article/DGXZQOUC100P00Q5A011C2000000/" target="_blank" rel="noopener" style="color:#B8E5C5;">日経新聞：竹中工務店、生成AIで部下との面談支援</a></li>
+      <li><a href="https://dcross.impress.co.jp/docs/usecase/003855.html" target="_blank" rel="noopener" style="color:#B8E5C5;">D-Cross：竹中工務店×DATAFLUCT ビルマネ生成AI</a></li>
+      <li><a href="https://built.itmedia.co.jp/bt/articles/2512/22/news109.html" target="_blank" rel="noopener" style="color:#B8E5C5;">BUILT：清水建設 ZEB化計画AI 脱炭素コンサル</a></li>
+      <li><a href="https://www.arc-navi.shikaku.co.jp/column/details.php?column_id=3648" target="_blank" rel="noopener" style="color:#B8E5C5;">総合資格navi：AIアシストで構造設計業務が大幅に効率化（大手ゼネコン編）</a></li>
+      <li><a href="https://prtimes.jp/main/html/rd/p/000000009.000152114.html" target="_blank" rel="noopener" style="color:#B8E5C5;">ACIMUS：生成AI×LiteBIM「ChatBIM ACIMUS」AI自動プランニング</a></li>
+      <li><a href="https://note.com/toshinakamura/n/n3552def398e8" target="_blank" rel="noopener" style="color:#B8E5C5;">xx architecture（note）：ローカルLLMで実践！建築基準法AIチャットボットの作り方</a></li>
+      <li><a href="https://note.com/just_50/n/n1b28fcc40b76" target="_blank" rel="noopener" style="color:#B8E5C5;">株式会社ジャスト：NotebookLM徹底解説と建設現場での活用法</a></li>
+      <li><a href="https://legalshift.jp/llm%E3%81%AE%E5%BC%B1%E7%82%B9%E5%85%8B%E6%9C%8Drag%E6%B4%BB%E7%94%A8%E4%BA%8B%E4%BE%8B%E3%81%A8notebooklm%E3%81%A7%E3%81%AE%E9%81%8B%E7%94%A8%E3%83%9D%E3%82%A4%E3%83%B3%E3%83%88" target="_blank" rel="noopener" style="color:#B8E5C5;">LegalShift：RAGとNotebookLMで法務分野応用</a></li>
+      <li><a href="https://persc.jp/blog/ai-architectural-renders-midjourney-stablediffusion/" target="_blank" rel="noopener" style="color:#B8E5C5;">PERSC：Midjourney・Stable Diffusionで建築パースを作る完全ガイド</a></li>
+      <li><a href="https://advalay.jp/25461/" target="_blank" rel="noopener" style="color:#B8E5C5;">advalay：AIで建築パースを作る方法5選（2026年版）</a></li>
+      <li><a href="https://online.xknowledge.co.jp/17463/" target="_blank" rel="noopener" style="color:#B8E5C5;">エクスナレッジ・オンライン：設計業務で生成AIを正しく上手に使いこなす</a></li>
+      <li><a href="https://www.capa.co.jp/archives/42835" target="_blank" rel="noopener" style="color:#B8E5C5;">株式会社キャパ：建築分野で話題の画像生成AI（Stable Diffusion vs Midjourney）</a></li>
+      <li><a href="https://www.cg.union-tec.jp/post/ai-tools-architecture-cg-2025" target="_blank" rel="noopener" style="color:#B8E5C5;">PersGPT：建築パース制作を効率化するAIツール14選（2025年版）</a></li>
+      <li><a href="https://www.asamisun.com/archives/4559" target="_blank" rel="noopener" style="color:#B8E5C5;">アサミ情報システム：ChatGPTでAutoCADの図形描画スクリプトを作成</a></li>
+      <li><a href="https://axconstdx.com/2025/03/11/" target="_blank" rel="noopener" style="color:#B8E5C5;">生成AIと建設DX：AI×CAD DXF自動生成</a></li>
+      <li><a href="https://axconstdx.com/2025/03/27/" target="_blank" rel="noopener" style="color:#B8E5C5;">生成AIと建設DX：Revit AIで変わる建築設計の常識</a></li>
+      <li><a href="https://blog.g-gen.co.jp/entry/automated-meeting-minutes-generation-with-gemini" target="_blank" rel="noopener" style="color:#B8E5C5;">G-gen Tech Blog：Google Meetの文字起こしとGemini 2.5 Proによる議事録作成</a></li>
+      <li><a href="https://www.yoshidumi.co.jp/collaboration-lab/google-meet-japanese-transcription" target="_blank" rel="noopener" style="color:#B8E5C5;">よしずみ：Meetの議事録、日本語で自動作成可能に</a></li>
+      <li><a href="https://qiita.com/wagateee/items/c801aac452a11cffaa5d" target="_blank" rel="noopener" style="color:#B8E5C5;">Qiita：GAS×Gemini in Meet 議事録自動タスク化</a></li>
+      <li><a href="https://www.mign.io/owned-media/54962/" target="_blank" rel="noopener" style="color:#B8E5C5;">mign：建築業界でAI活用の最新法</a></li>
+      <li><a href="https://n1-inc.co.jp/kenchiku-ai/" target="_blank" rel="noopener" style="color:#B8E5C5;">N1：建築業界における生成AI活用事例15選</a></li>
+      <li><a href="https://note.com/sherpa888/n/nb5449b553c0f" target="_blank" rel="noopener" style="color:#B8E5C5;">株式会社シェルパ：生成AIを活用した建築パースの可能性</a></li>
+    </ul>
+
+    <p class="copy">© 有限会社アートソウル All Rights Reserved.</p>
+  </div>
+</footer>
+
+<script>
+// FAQ Accordion
+document.querySelectorAll('.faq-item').forEach(function(item){
+  var btn = item.querySelector('.faq-q');
+  btn.addEventListener('click', function(){
+    var isOpen = item.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+});
+
+// Category Accordion
+document.querySelectorAll('.cat-item').forEach(function(item){
+  var btn = item.querySelector('.cat-q');
+  btn.addEventListener('click', function(){
+    var isOpen = item.classList.toggle('open');
+    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+});
+
+// Hash navigation: open the targeted accordion item
+function openHashTarget(){
+  var hash = window.location.hash;
+  if(!hash) return;
+  var target = document.querySelector(hash);
+  if(target && target.classList.contains('cat-item') && !target.classList.contains('open')){
+    target.classList.add('open');
+    var btn = target.querySelector('.cat-q');
+    if(btn) btn.setAttribute('aria-expanded', 'true');
+  }
+}
+window.addEventListener('load', openHashTarget);
+window.addEventListener('hashchange', openHashTarget);
+</script>
+
+</body>
+</html>
