@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント ＋ 見積自動化（積算）深掘り v1.3</title>
+<title>建築設計事務所のためのAI活用マップ｜10課題 × Claude Codeエージェント ＋ 見積自動化（積算）＋ NotebookLM見積データベース v1.4</title>
 <meta name="description" content="職員3名の建築設計事務所が明日から使える、生成AI活用の総まとめ。チャプロ社カタログ60項目を業務フロー10カテゴリに再構造化し、ChatGPT/Google Workspace系とClaude Codeデスクトップそれぞれの実装例、初心者〜外注レベルまで段階的に解説。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1028,6 +1028,205 @@ button { font-family: inherit; }
   margin: 0;
 }
 
+/* ===== v1.4 Design-Only Badge & PoC Banner ===== */
+.design-only-badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #B45309;
+  background: #FEF3C7;
+  border: 1px solid #FCD34D;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-left: 8px;
+  vertical-align: middle;
+  font-family: var(--font-en);
+}
+.poc-banner {
+  background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+  border-left: 4px solid #D97706;
+  padding: 18px 22px;
+  border-radius: 0 6px 6px 0;
+  margin: 28px 0 20px;
+  font-size: 14.5px;
+  color: #1a1a1a;
+  line-height: 1.85;
+}
+.poc-banner strong { color: #92400E; }
+.poc-banner .badge-mini {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #B45309;
+  background: #FFFFFF;
+  border: 1px solid #FCD34D;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-right: 4px;
+  font-family: var(--font-en);
+}
+
+/* ===== NotebookLM Section (Google Blue) ===== */
+.nb-grid {
+  display: grid;
+  gap: 22px;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  margin-top: 32px;
+}
+.nb-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #4285F4;
+  border-radius: 6px;
+  padding: 26px 28px 22px;
+  display: flex;
+  flex-direction: column;
+}
+.nb-card .nb-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: #1A73E8;
+  letter-spacing: 0.12em;
+  font-family: var(--font-en);
+  margin-bottom: 6px;
+}
+.nb-card h4 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 12px;
+  line-height: 1.45;
+}
+.nb-card .nb-core {
+  background: #F0F6FF;
+  border-left: 3px solid #4285F4;
+  padding: 12px 16px;
+  font-size: 13.5px;
+  color: var(--text-sub);
+  margin-bottom: 14px;
+  border-radius: 0 4px 4px 0;
+  line-height: 1.75;
+}
+.nb-card h5 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1A73E8;
+  margin: 14px 0 8px;
+  letter-spacing: 0.03em;
+}
+.nb-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px;
+}
+.nb-card ul li {
+  padding: 6px 0 6px 18px;
+  position: relative;
+  font-size: 13.5px;
+  color: #444;
+  line-height: 1.7;
+  border-bottom: 1px dashed #eee;
+  margin: 0;
+}
+.nb-card ul li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 14px;
+  width: 10px;
+  height: 2px;
+  background: #4285F4;
+}
+.nb-card ol {
+  padding-left: 1.4em;
+  margin: 0;
+}
+.nb-card ol li {
+  padding: 4px 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #444;
+}
+.nb-card code {
+  background: #E8F0FE;
+  color: #1A73E8;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: 'Helvetica Neue', monospace;
+  font-size: 12.5px;
+}
+.roles-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  margin: 20px 0;
+}
+.role-card {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-top: 3px solid #4285F4;
+  border-radius: 6px;
+  padding: 18px 18px 14px;
+}
+.role-card .role-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #1A73E8;
+  margin-bottom: 6px;
+  font-family: var(--font-en);
+}
+.role-card h6 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--charcoal);
+  margin-bottom: 6px;
+}
+.role-card p {
+  font-size: 12.5px;
+  color: #555;
+  margin: 0;
+  line-height: 1.65;
+}
+.pricing-box {
+  background: #F0F6FF;
+  border: 1px solid #B3D4FC;
+  border-radius: 6px;
+  padding: 20px 24px;
+  margin: 24px 0;
+  font-size: 14px;
+  line-height: 1.85;
+}
+.pricing-box .price-line {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px dashed #B3D4FC;
+}
+.pricing-box .price-line:last-of-type { border-bottom: none; }
+.pricing-box .price-total {
+  border-top: 2px solid #4285F4;
+  margin-top: 8px;
+  padding-top: 12px;
+  font-weight: 700;
+  color: #1A73E8;
+  font-size: 16px;
+  border-bottom: none;
+}
+.limit-warning {
+  background: #FFF8F8;
+  border-left: 4px solid #DC2626;
+  padding: 14px 18px;
+  border-radius: 0 4px 4px 0;
+  margin: 16px 0;
+  font-size: 13.5px;
+  color: #1a1a1a;
+  line-height: 1.75;
+}
+.limit-warning strong { color: #9B2C2C; }
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .section { padding: 56px 0; }
@@ -1125,7 +1324,8 @@ button { font-family: inherit; }
       <a href="#quickstart">明日からの3STEP</a>
       <a href="#cases">日本国内の事例</a>
       <a href="#agents">Agentsで深掘り</a>
-      <a href="#kenseki">見積自動化（積算）</a>
+      <a href="#kenseki">見積自動化（Claude Code版）</a>
+      <a href="#notebooklm">NotebookLM版（Workspace）</a>
       <a href="#faq">FAQ</a>
     </div>
   </div>
@@ -2665,6 +2865,12 @@ button { font-family: inherit; }
       AIに「12,500 × 35.7 = ?」を解かせると、確率的に間違えます。<strong>AIは「読み取り・分類・転記・整合検査」担当、計算はExcel数式・Python・専用システム担当</strong>。この役割分担を守ったときだけ、AI見積自動化は安全に動きます。
     </div>
 
+    <div class="poc-banner">
+      <span class="badge-mini">DESIGN ONLY</span>
+      <strong>本章の位置づけ：AI導入の概念設計・たたき台です。</strong><br>
+      K1〜K5および15項目チェックは <strong>設計案・思想の枠組み</strong>であり、<strong>実装はクライアント固有業務のヒアリングと PoC（Proof of Concept：1案件での試行検証）を経る</strong>必要があります。本資料の時短数値・SaaS精度などは <strong>類推値および各社公式情報の引用</strong>であり、御社環境での再現を保証するものではありません。導入効果は業者数・案件規模・既存業務フローの複雑度により大きく変動します。
+    </div>
+
     <div class="critical-banner" style="border-left-color:#1A6D39; background:linear-gradient(135deg,#F0F8F2 0%, #E0F0E5 100%);">
       <strong>SaaS（ミャク楽・AI積算）と Claude Code 自前構築の棲み分け：</strong>競合ではなく組み合わせる。<br>
       <strong>SaaS の強み：</strong>建材データベース・標準歩掛り・OCR精度が箱で揃う。サブスクで即効・全社導入も早い。<br>
@@ -2678,7 +2884,7 @@ button { font-family: inherit; }
       <!-- K1 -->
       <div class="agent-card">
         <div class="agent-num">K1 / COLLECT</div>
-        <h4>業者見積の取り込み・統合スキル <code>/mitsumori-collect</code></h4>
+        <h4>業者見積の取り込み・統合スキル <code>/mitsumori-collect</code><span class="design-only-badge">設計案／PoC必須</span></h4>
         <div class="agent-core">
           <strong>核：</strong>協力会社・専門工事業者から届く<strong>形式バラバラの見積（PDF／Excel／写真／手書き）</strong>を、Claude Codeが社内標準フォーマットに変換。AIの仕事は<strong>抽出・分類・転記まで</strong>。計算は触らない。
         </div>
@@ -2708,7 +2914,7 @@ button { font-family: inherit; }
       <!-- K2 -->
       <div class="agent-card">
         <div class="agent-num">K2 / CHECK</div>
-        <h4>3視点並列バリデーション <code>@mitsumori-checker</code></h4>
+        <h4>3視点並列バリデーション <code>@mitsumori-checker</code><span class="design-only-badge">設計案／PoC必須</span></h4>
         <div class="agent-core">
           <strong>核：</strong>K1で集約した見積データを <strong>3つの独立エージェントで同時検査</strong>。1人で順番に見ていたら見落とす不整合を、並列で炙り出す（A2応用）。
         </div>
@@ -2730,7 +2936,7 @@ button { font-family: inherit; }
       <!-- K3 -->
       <div class="agent-card">
         <div class="agent-num">K3 / HIROI</div>
-        <h4>数量拾い直し＆突き合わせ <code>/suuryouhiroi-check</code></h4>
+        <h4>数量拾い直し＆突き合わせ <code>/suuryouhiroi-check</code><span class="design-only-badge">設計案／PoC必須</span></h4>
         <div class="agent-core">
           <strong>核：</strong>設計図書PDFから<strong>自社で数量を独自に拾い直し</strong>、業者見積と突き合わせる。業者の「拾い忘れ」「過剰計上」を機械的に検出する保険。
         </div>
@@ -2753,7 +2959,7 @@ button { font-family: inherit; }
       <!-- K4 -->
       <div class="agent-card">
         <div class="agent-num">K4 / MEMORY</div>
-        <h4>過去案件Memory見積参謀 <code>/mitsumori-rag</code></h4>
+        <h4>過去案件Memory見積参謀 <code>/mitsumori-rag</code><span class="design-only-badge">設計案／PoC必須</span></h4>
         <div class="agent-core">
           <strong>核：</strong>過去案件の<strong>成約価格・実行原価・利益率・業者別単価</strong>をMemoryに蓄積。新規案件で「類似案件はこの単価で通った」「B社のほうが3%安い」を即提示。<strong>AIに創作させない＝過去データから引用させる</strong>のがハルシネーション対策の本丸。
         </div>
@@ -2776,7 +2982,7 @@ button { font-family: inherit; }
       <!-- K5 -->
       <div class="agent-card">
         <div class="agent-num">K5 / FINAL</div>
-        <h4>最終見積書ジェネレータ＋検算フック <code>/mitsumori-final</code></h4>
+        <h4>最終見積書ジェネレータ＋検算フック <code>/mitsumori-final</code><span class="design-only-badge">設計案／PoC必須</span></h4>
         <div class="agent-core">
           <strong>核：</strong>K1〜K4の結果を <strong>顧客提出用フォーマット</strong>に組み上げる最終段階。各段階で Hooks が自動発火して検算し、出力前に <strong>全項目の二重検算</strong> を強制。
         </div>
@@ -2795,7 +3001,7 @@ button { font-family: inherit; }
           <li>承認ボタンは代表のみが押せる（権限制御）</li>
           <li>承認後に <code>提出版_YYYYMMDD_HHmm.xlsx</code> として版管理保存</li>
         </ol>
-        <p style="font-size:12.5px; color:#777; margin-top:8px;">★ Excelテンプレに <strong>SUMPRODUCT・ROUNDDOWN・IF</strong> 等の数式を最初から仕込んでおき、AIは「値の埋め込み」しかしない設計が安全</p>
+        <p style="font-size:12.5px; color:#777; margin-top:8px;">★ Excelテンプレに <code>SUMPRODUCT</code>・<code>ROUNDDOWN</code>・<code>IF</code> 等の数式を最初から仕込んでおき、AIは「値の埋め込み」しかしない設計が安全</p>
       </div>
 
     </div>
@@ -2902,7 +3108,7 @@ button { font-family: inherit; }
     <table class="cat-detail-table">
       <tr>
         <th>標準歩掛り・積算基準への適合</th>
-        <td>国土交通省 大臣官房官庁営繕部の <a href="https://www.mlit.go.jp/gobuild/kijun_touitukijyun_s_hyoujyun_bugakari.htm" target="_blank" rel="noopener"><strong>「公共建築工事標準単価積算基準」</strong>（最終改定：令和8年3月11日 国営積第15号）</a>および <a href="https://www.mlit.go.jp/gobuild/shiryou_sekisan_unnyou.htm" target="_blank" rel="noopener">「公共建築工事積算基準」関連資料</a> に準拠した諸経費率・歩掛り計算。<strong>都道府県ごとの上乗せ規定</strong>もK4のMemoryで管理。発注者（国・自治体・独法）別の差を機械的に判別。</td>
+        <td>国土交通省 大臣官房官庁営繕部の <a href="https://www.mlit.go.jp/gobuild/kijun_touitukijyun_s_hyoujyun_bugakari.htm" target="_blank" rel="noopener"><strong>「公共建築工事標準単価積算基準」（最新版）</strong></a>および <a href="https://www.mlit.go.jp/gobuild/shiryou_sekisan_unnyou.htm" target="_blank" rel="noopener">「公共建築工事積算基準」関連資料</a> に準拠した諸経費率・歩掛り計算。<strong>都道府県ごとの上乗せ規定</strong>もK4のMemoryで管理。発注者（国・自治体・独法）別の差を機械的に判別。<br><span style="font-size:12px; color:#777;">※ 改定年・告示番号は時期により更新されるため、本資料では具体年を明示せず公式サイトの最新版参照とします。実装時は告示番号・改定日を一級建築士・積算担当者が一次確認のうえ採用してください。</span></td>
       </tr>
       <tr>
         <th>共通仮設費・現場管理費・一般管理費</th>
@@ -2965,18 +3171,285 @@ button { font-family: inherit; }
     </div>
 
     <p style="margin-top:28px; font-size:14px; color:#555;">
-      ※ 標準的な見積1件あたり、PHASE 1 完了で <strong>30〜50%の時短</strong>、PHASE 4 完了で <strong>70〜80%の時短</strong>が目安（業者数・案件規模による）。<br>
-      ※ ただし<strong>計算ミスをゼロにする</strong>のが目的であり、時短は副次的成果。「速いが間違える」より「正確で半自動」を最優先する設計です。<br>
+      ※ 標準的な見積1件あたり、PHASE 1 完了で <strong>30〜50%の時短</strong>、PHASE 4 完了で <strong>70〜80%の時短</strong>が <strong>類推値の目安</strong>（業者数・案件規模・既存業務フローの複雑度で大きく変動するため、<strong>御社環境での個別検証が必須</strong>）。<br>
+      ※ <strong>本数値は導入効果のコミットメント・成果保証ではありません</strong>。「速いが間違える」より「正確で半自動」を最優先する設計のため、時短は副次的成果として扱ってください。<br>
       ※ <strong>代替パス：</strong>「K4 → K1 → K2 → K3 → K5」の順序も有効。過去案件Memory（K4）を先行構築すれば、K1〜K2の検算精度が一気に上がる。ベテラン主導・過去蓄積豊富な事務所に向く。
     </p>
   </div>
 </section>
 
-<!-- ===== 09 / FAQ ===== -->
+<!-- ===== 09 / NOTEBOOK_LM（Workspace版・見積データベース化） ===== -->
+<section class="section alt-bg" id="notebooklm">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">09 / NOTEBOOK_LM</span>
+      <h2>NotebookLM 見積データベース化 — Google Workspace 前提の「今週から始める」ルート</h2>
+    </div>
+    <p class="section-lead">
+      Claude Code導入は中長期投資（PoC・スキル開発・運用定着）。一方、<strong>御社が既に Google Workspace Business Standard を使っている前提</strong>なら、<strong>NotebookLM を見積データベース化する</strong>ルートを今週から始められます。月額 <strong>2,400円/人/月</strong>（NotebookLM Plus）の追加で、過去案件のRAG（検索拡張）基盤が立ち上がる。本章は <strong>非エンジニアが運用するためのマニュアル兼提案書</strong>として構成しました。
+    </p>
+
+    <div class="poc-banner" style="border-left-color:#1A73E8; background:linear-gradient(135deg,#F0F6FF 0%, #E3EEFF 100%);">
+      <span class="badge-mini" style="background:#fff; border-color:#B3D4FC; color:#1A73E8;">VERIFICATION</span>
+      <strong>事前検証結論：NotebookLMは「過去案件参照のRAG基盤」として◎使える。「見積を作る計算エンジン」としては×不向き。</strong><br>
+      ハルシネーション抑制の「ソースグラウンデッド設計」と「投入ソース内のみ参照＋引用元提示」がこの用途に向く理由。ただし<strong>計算・集計・合計は別レイヤー（Sheets＋関数）に分離</strong>するのが必須。NotebookLMに「合計を出して」と指示するのは禁則とします。
+    </div>
+
+    <h3>N1〜N8：NotebookLM 見積データベース構築マニュアル</h3>
+    <div class="nb-grid">
+
+      <!-- N1 何ができる -->
+      <div class="nb-card">
+        <div class="nb-num">N1 / SCOPE</div>
+        <h4>何ができる／何ができないか</h4>
+        <div class="nb-core">
+          <strong>核：</strong>NotebookLMは「投入済みソース内のみ参照」＋「引用元のソース番号付き回答」が標準。建築見積では「過去類似案件の単価・諸経費率の参照」が主用途。
+        </div>
+        <h5>○ できる（得意領域）</h5>
+        <ul>
+          <li>「100㎡規模の商業テナント・内装込み・直近3年の類似案件は？」と日本語で問う → 該当案件の単価・諸経費率を引用付き提示</li>
+          <li>業者別の過去単価比較（業者名・工種でフィルタ）</li>
+          <li>「あの案件で代表が判断した理由」「過去のトラブル事例」の即時引き出し</li>
+          <li>新規案件着手時に類似案件3〜5本を自動サジェスト</li>
+          <li>音声概要（NotebookLM固有機能）で過去事例を「移動中に聴く」運用</li>
+        </ul>
+        <h5>× できない（禁則）</h5>
+        <ul>
+          <li><strong>数値の四則演算・合計・集計</strong>（NotebookLMは要約・抽出が主、計算は不得手）</li>
+          <li>業者見積Excelの数式そのもの</li>
+          <li>OCR誤読の自動修正（PDF読み込み前にAI-OCR等で前処理推奨）</li>
+          <li>リアルタイムな単価マスター更新（ソース投入更新が手動）</li>
+        </ul>
+        <h5>△ 前処理が必要な領域（年200件規模での運用ルール）</h5>
+        <ul>
+          <li><strong>業者Excel見積の投入：</strong>Excel原本を直接投入できるが、複雑なシート・非定型レイアウトは精度低下。<strong>推奨フロー：</strong>① Geminiで各Excelから「単価・数量・備考」をサマリー抽出 → ② サマリーMDをNotebookLMに投入 → ③ 数値計算は原本Excel側で実行（NotebookLMには計算させない）</li>
+          <li><strong>OCR誤読のPDF：</strong>AI-OCR（佐助・ミャク楽等）で再OCR後に投入。誤読まま投入すると検索結果に誤情報が混入</li>
+          <li><strong>大判図面PDF：</strong>200MB超は分割。図面そのものより「拾い書・特記仕様書」のみ投入が高精度</li>
+        </ul>
+      </div>
+
+      <!-- N2 全体図 -->
+      <div class="nb-card">
+        <div class="nb-num">N2 / ARCHITECTURE</div>
+        <h4>4者分業の全体図 — NotebookLM / Gemini / Sheets / Apps Script</h4>
+        <div class="nb-core">
+          <strong>核：</strong>NotebookLM単体ではなく、Workspace4要素の <strong>明確な役割分担</strong>で運用する。「計算ミス防止」の最重要原則「AIに四則演算させない」をWorkspace側で実現する設計。
+        </div>
+        <div class="roles-grid">
+          <div class="role-card">
+            <div class="role-tag">REFERENCE</div>
+            <h6>NotebookLM</h6>
+            <p>過去見積・契約・議事録を投入。類似案件の<strong>参照・検索・引用</strong>に専念。</p>
+          </div>
+          <div class="role-card">
+            <div class="role-tag">GENERATION</div>
+            <h6>Gemini (Docs/Drive)</h6>
+            <p>顧客カバーレター・特約事項・メール文の<strong>下書き生成</strong>。Docsの作業中に呼び出せる。</p>
+          </div>
+          <div class="role-card">
+            <div class="role-tag">CALCULATION</div>
+            <h6>Google Sheets</h6>
+            <p>計算エンジン。<code>SUMIFS</code>／<code>VLOOKUP</code>／<code>ROUNDDOWN</code> 等の数式で三方向検算・歩掛り検算を固定化。</p>
+          </div>
+          <div class="role-card">
+            <div class="role-tag">AUTOMATION</div>
+            <h6>Apps Script (GAS)</h6>
+            <p>定型自動化。メール発火・PDF化・カレンダー連携・<strong>承認フロー</strong>を無料で構築可能。</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- N3 投入ステップ -->
+      <div class="nb-card">
+        <div class="nb-num">N3 / OPERATIONS</div>
+        <h4>NotebookLM への過去案件投入 7STEP</h4>
+        <div class="nb-core">
+          <strong>核：</strong>投入の順序と命名規則が、後の検索精度を決める。最初の30件で「型」を作り、以降は同じ型でひたすら追加する。
+        </div>
+        <h5>STEP 1〜7</h5>
+        <ol>
+          <li><strong>Notebook構成設計：</strong>1業種＝1Notebook（住宅／RC集合住宅／商業施設／公共／改修等）。混在は精度低下</li>
+          <li><strong>ソース上限の管理：</strong>NotebookLM Plus は1Notebook=100ソース上限。古い案件は <code>99_アーカイブ</code> Notebookに退避</li>
+          <li><strong>ファイル命名規則の確定：</strong><code>YYYY_案件名_工種_業者名.pdf</code>（例：<code>2025_新宿テナント_外装_山田建設.pdf</code>）</li>
+          <li><strong>サマリーMD（要点1枚）添付：</strong>各案件にGeminiでサマリーMDを自動生成 → 案件本体と同時にNotebookに投入。検索精度が劇的に上がる</li>
+          <li><strong>初期30件投入：</strong>まず直近30件で型を確立。各案件に「この案件のキーワード」「特殊事情」を3〜5語で書いた共通テンプレを採用</li>
+          <li><strong>運用開始：</strong>新規案件着手時に「類似案件3本」「単価相場」「過去のトラブル」の3問テンプレで毎回問う</li>
+          <li><strong>月次メンテ：</strong>完了案件のサマリーを更新、進行中Notebookと完了Notebookを分離、不要ソースは <code>99_アーカイブ</code> へ</li>
+        </ol>
+        <h5>Drive → NotebookLM 取り込みの画面操作（所要90秒）</h5>
+        <ol>
+          <li>ブラウザで <a href="https://notebooklm.google.com" target="_blank" rel="noopener" style="color:#1A73E8;">notebooklm.google.com</a> にWorkspaceアカウントでログイン</li>
+          <li>左上「<strong>新しいノートブック</strong>」を押し、業種別Notebook名を設定（例：「商業施設_2025」）</li>
+          <li>「<strong>ソースを追加</strong>」→ 「Google Drive」を選び、案件フォルダから複数ファイル一括選択（PDF・Docs・Sheets全部OK）</li>
+          <li>投入後、各ソース左側に表示される「自動概要」の品質を1件1分で目視確認（おかしければソース差し替え）</li>
+          <li>右側チャットで疎通確認の質問「この案件の主要工種3つは？」を1回投げて回答品質を見る</li>
+        </ol>
+        <h5>初期投入の実工数試算（30件モデル・1人作業）</h5>
+        <ul>
+          <li>既存PDFのリネーム作業（命名規則統一）：1件1〜2分 × 30件 ＝ <strong>約30分〜1時間</strong>（PowerToys等の一括リネームで短縮可）</li>
+          <li>サマリーMD自動生成（Gemini）：1件5〜7分 × 30件 ＝ <strong>約2.5〜3.5時間</strong></li>
+          <li>NotebookLM投入＋疎通確認：<strong>約1時間</strong></li>
+          <li>合計：1人で <strong>半日〜1日</strong>。Week 1〜2 で職員1名をアサイン推奨</li>
+        </ul>
+      </div>
+
+      <!-- N4 計算分離 -->
+      <div class="nb-card">
+        <div class="nb-num">N4 / CALC SAFETY</div>
+        <h4>計算ミスを起こさない3原則（Workspace版）</h4>
+        <div class="nb-core">
+          <strong>核：</strong>08/KENSEKIで提示した「AIに四則演算させない」原則を、Workspace側ではこう実装する。
+        </div>
+        <h5>原則1：NotebookLMには「数字の解釈」のみ任せる</h5>
+        <ul>
+          <li>○ 「単価帯はいくら〜いくらだったか」「業者Aは業者Bの何%安かったか（概算）」</li>
+          <li>× 「合計を出して」「平均を計算して」「諸経費10%を載せた金額は？」</li>
+        </ul>
+        <h5>原則2：計算は Google Sheets の数式に丸投げ</h5>
+        <ul>
+          <li>NotebookLMから取得した参考単価 → Sheetsの <code>単価マスター</code> シートに転記</li>
+          <li>業者見積Excel/CSVと <code>VLOOKUP</code>／<code>SUMIFS</code> で機械的に突き合わせ</li>
+          <li>三方向検算（数量×単価＝金額／小計の合計／総額）を <code>SUMPRODUCT</code>＋<code>IF</code> で固定化</li>
+          <li>端数処理は <code>ROUNDDOWN</code>／<code>ROUND</code> を必ず関数で固定</li>
+        </ul>
+        <h5>原則3：人間最終承認を Apps Script で強制</h5>
+        <ul>
+          <li>「承認ボタン」を代表のみが押せる権限制御</li>
+          <li>承認後は <code>提出版_YYYYMMDD_HHmm.xlsx</code> に自動でPDF化＋ファイル名固定</li>
+          <li>編集履歴は <code>Sheets版履歴</code> が自動で残す（Excel単体より優位）</li>
+        </ul>
+      </div>
+
+      <!-- N5 精度を上げる -->
+      <div class="nb-card">
+        <div class="nb-num">N5 / TUNING</div>
+        <h4>精度を上げる実装ノウハウ</h4>
+        <div class="nb-core">
+          <strong>核：</strong>「サマリーMDの質」と「メタデータの揃え方」で、検索精度が3倍違う。
+        </div>
+        <h5>サマリーMD（1案件1枚）の必修テンプレ</h5>
+        <ul>
+          <li>案件概要：施主種別／延床／構造／用途／竣工年</li>
+          <li>工種範囲：建築／電気／設備／外構の含まれる範囲を箇条書き</li>
+          <li>特殊事情：法規上の制約／施主固有要望／敷地条件</li>
+          <li>主要数値：契約額（概算）／諸経費率／工期</li>
+          <li>業者別単価：主要工種ごとに「業者名／単価／単位」</li>
+          <li>振り返り：成功要因／反省点／代表の判断ポイント</li>
+        </ul>
+        <h5>検索の効くプロンプト・テンプレ</h5>
+        <ul>
+          <li>「<strong>規模・工種・構造を3軸で揃えた類似案件を3〜5本</strong>抽出して、主要工種の単価レンジを引用元付きで提示してください」</li>
+          <li>「<strong>業者Xの過去5年の単価推移</strong>を、工種別に時系列で整理してください」</li>
+          <li>「<strong>過去の入札案件でVE提案が採用された例</strong>を、採用理由とともに3本」</li>
+        </ul>
+        <h5>サマリーMD 自動生成プロンプト（Geminiにそのまま貼る）</h5>
+        <p style="font-size:12.5px; color:#555; margin-bottom:8px;">対象案件のPDF/Docs/Sheetsを開いた状態でGemini（Docsサイドパネル or chat）に以下を貼ると、テンプレに沿った1案件サマリーMDが返ります。</p>
+        <div style="background:#F0F6FF; border:1px solid #B3D4FC; border-radius:4px; padding:14px 16px; font-size:12px; font-family:'Helvetica Neue',monospace; color:#1a1a1a; line-height:1.85;">
+あなたは建築設計事務所のナレッジ管理担当です。<br>
+添付の見積書PDF・契約書PDF・議事録から、以下の形式で1案件サマリーMDを作成してください。<br>
+<strong>出力は必ず以下の構造を守り、空欄は「不明」と明記。数値は原本記載のまま転記し、計算・推測は禁止</strong>。<br>
+---<br>
+■ 案件概要：施主種別／延床／構造／用途／竣工年<br>
+■ 工種範囲：建築 / 電気 / 設備 / 外構 のうち含まれる範囲を箇条書き<br>
+■ 特殊事情：法規・施主要望・敷地条件の特記事項<br>
+■ 主要数値：契約額（概算）／諸経費率／工期（原本値を転記）<br>
+■ 業者別単価（主要工種のみ）：業者名／工種／単価／単位<br>
+■ 振り返り：成功要因 / 反省点 / 代表の判断ポイント<br>
+---
+        </div>
+        <p style="font-size:12.5px; color:#777; margin-top:8px;">★「数値は転記のみ・計算禁止」を明示することがハルシネーション防止の要。Geminiにも08/KENSEKIの最重要原則を引き継がせる。</p>
+      </div>
+
+      <!-- N6 制限事項 -->
+      <div class="nb-card">
+        <div class="nb-num">N6 / LIMITS</div>
+        <h4>制限事項と注意点（必修）</h4>
+        <div class="nb-core">
+          <strong>核：</strong>「使える領域」と「使えない領域」を初日に明示すれば、運用事故は防げる。
+        </div>
+        <div class="limit-warning">
+          <strong>NotebookLM Plus（Workspace付帯）の主要制限：</strong><br>
+          ・1 Notebook あたり <strong>100 ソース上限</strong>（個人Pro=300・無料=50）<br>
+          ・各ソース最大 <strong>50万単語 / 200MB</strong><br>
+          ・Notebook 数上限 <strong>500冊</strong>（個人Pro=500・無料=100）<br>
+          ※ 詳細仕様は時期により更新されるため <a href="https://support.google.com/notebooklm" target="_blank" rel="noopener" style="color:#1A73E8;">公式ヘルプの最新版</a> を一次確認してください
+        </div>
+        <h5>運用上の注意</h5>
+        <ul>
+          <li><strong>計算は不得手：</strong>四則演算・合計・集計は禁則（Sheetsに任せる）</li>
+          <li><strong>古いソース管理：</strong>3年以上前の案件は別Notebookに退避（精度劣化防止）</li>
+          <li><strong>個人情報：</strong>施主氏名・連絡先は事前マスキング推奨</li>
+          <li><strong>OCR誤読：</strong>PDF文字化けは前処理（AI-OCR/手修正）を経てから投入</li>
+          <li><strong>2026年新機能：</strong>Cinematic Video Overviews（動画自動生成・2026年追加）、Interactive Audio（音声で「挙手して質問」）が追加。社内勉強会・新人教育で活用可（リリース月の特定は公式の更新履歴を一次確認推奨）</li>
+        </ul>
+        <h5>NDA・公共工事電子納品データの取扱判断（必修フロー）</h5>
+        <ol>
+          <li><strong>STEP A：契約書のNDA条項を確認</strong> — 「第三者提供禁止」「外部システムへの保存禁止」の文言の有無を <strong>一級建築士が必ず確認</strong>。文言ありなら STEP D へ</li>
+          <li><strong>STEP B：Workspace法人プランの保護条件を施主に提示</strong> — 「入力データはAI学習に使われない契約」「データはGoogle社員も閲覧しない」をWorkspace契約書面で示し、施主から事前同意を取得（メール1通で済む）</li>
+          <li><strong>STEP C：公共工事の電子納品データ（OCF/SXF等）</strong> — 発注機関の <a href="https://www.cals-ed.go.jp/" target="_blank" rel="noopener" style="color:#1A73E8;">電子納品要領</a>・情報セキュリティガイドラインを再確認。<strong>原則「成果品原本はNotebookLM投入不可」、「自社作成の概要メモ・サマリーMDのみ可」</strong>とするのが安全</li>
+          <li><strong>STEP D：判断に迷ったら投入しない</strong> — 「迷ったらマスキング後の要約のみ」「原本投入は禁則」。グレーゾーンは必ず白寄りで運用</li>
+          <li><strong>STEP E：投入可否ログを案件単位で残す</strong> — 「投入可 / マスキング後可 / 投入不可」の3分類で別Notebookに物理分離。誤投入を仕組みで防ぐ</li>
+        </ol>
+      </div>
+
+      <!-- N7 費用・スケジュール -->
+      <div class="nb-card">
+        <div class="nb-num">N7 / COST</div>
+        <h4>費用と着手スケジュール</h4>
+        <div class="nb-core">
+          <strong>核：</strong>追加投資は2,400円/人/月。3名で月+7,200円。<strong>Claude Code導入の1/4以下のコストで、今週から動く</strong>。
+        </div>
+        <div class="pricing-box">
+          <div class="price-line"><span>Google Workspace Business Standard（既存・参考）</span><span>1,800円/人/月</span></div>
+          <div class="price-line"><span>NotebookLM Plus（追加）</span><span>2,400円/人/月</span></div>
+          <div class="price-line price-total"><span>合計</span><span>4,200円/人/月（3名で月12,600円）</span></div>
+        </div>
+        <h5>着手スケジュール（4週間モデル）</h5>
+        <ol>
+          <li><strong>Week 1：</strong>NotebookLM Plus契約／Notebook構成設計／直近10件のサマリーMD作成（Geminiで自動）</li>
+          <li><strong>Week 2：</strong>10件投入＋検索テスト／プロンプトテンプレ3本確定／Sheets単価マスター下書き</li>
+          <li><strong>Week 3：</strong>残り20件投入（合計30件）／新規案件1本でPoC運用／検索結果の品質評価</li>
+          <li><strong>Week 4：</strong>運用ルール文書化／月次メンテ手順確定／全職員への共有・教育</li>
+        </ol>
+        <p style="font-size:12.5px; color:#777; margin-top:8px;">※ 4週間モデルは標準的な小規模事務所の目安。業者数・案件規模・既存資料の整理状況で前後します。</p>
+      </div>
+
+      <!-- N8 Claude Code併用 -->
+      <div class="nb-card">
+        <div class="nb-num">N8 / HYBRID</div>
+        <h4>Claude Codeルートとの併用シナリオ（中長期）</h4>
+        <div class="nb-core">
+          <strong>核：</strong>NotebookLMで「過去案件の頭脳」を整え、後にClaude Codeで「自動化の手足」を加える <strong>段階導入</strong>が現実解。最初からClaude Code導入を急ぐ必要はない。
+        </div>
+        <h5>段階別の組み合わせ</h5>
+        <ul>
+          <li><strong>STAGE 1（M1〜M3）：</strong>NotebookLM単独。過去案件50〜100件投入・運用定着・社内ノウハウの可視化</li>
+          <li><strong>STAGE 2（M4〜M6）：</strong>Claude Code Pro導入（代表のみ）。NotebookLMで類似案件特定 → Claude Codeで業者見積の自動取り込み（K1）＋並列バリデーション（K2）</li>
+          <li><strong>STAGE 3（M7〜）：</strong>Claude CodeのMCP連携（A3）でNotebookLMをデータソース化。「過去案件参照→計算→提出文生成」を1コマンドで実行する高度自動化</li>
+        </ul>
+        <h5>判断基準（どちらを先に？）</h5>
+        <ul>
+          <li><strong>NotebookLM先行が向く：</strong>Workspace既導入／過去資料がGoogle Drive上にある／代表がプログラミング未経験／予算月1万円台</li>
+          <li><strong>Claude Code先行が向く：</strong>Microsoft 365中心／機密案件が多い（社外送信NG）／代表がIT慣れ／予算月3万円台で本格運用したい</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <h3 id="nb-summary">本章の要約 — 「迷ったらこう答える」3行</h3>
+    <table class="cat-detail-table">
+      <tr><th>結論</th><td>御社が既にWorkspace Business Standardを使っているなら、<strong>NotebookLM Plus（2,400円/人/月）を即日追加</strong>し、過去30件投入＋4週間運用ルール確立から着手するのが <strong>最小投資で最大効果</strong>。</td></tr>
+      <tr><th>禁則</th><td>NotebookLMに <strong>計算・合計・集計をさせない</strong>。数字の解釈と引用は◎、計算は禁則（Sheetsで実行）。</td></tr>
+      <tr><th>次の一手</th><td>運用が回ったら（M4以降）、Claude Code Pro を <strong>代表のみ</strong>で追加導入し、K1（業者見積取り込み）から段階的に拡張。NotebookLMはそのまま「過去案件の頭脳」として並走させる。</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== 10 / FAQ ===== -->
 <section class="section alt-bg" id="faq">
   <div class="container">
     <div class="section-head">
-      <span class="section-num">09 / FAQ</span>
+      <span class="section-num">10 / FAQ</span>
       <h2>よくある質問</h2>
     </div>
 
@@ -3110,7 +3583,7 @@ button { font-family: inherit; }
     <p>
       担当：上村桂右<br>
       Mail：uemura@artsoul.jp<br>
-      本資料：建築設計事務所のためのAI活用マップ v1.3（2026-06-03 作成・同日 Claude Codeエージェント章追加・同日 初心者向けSVGフロー図5本追加・同日 見積自動化（積算）章を追加・同日 A2Aレビュー指摘 7件全件反映）
+      本資料：建築設計事務所のためのAI活用マップ v1.4（2026-06-03 作成・同日 Claude Codeエージェント章追加・同日 初心者向けSVGフロー図5本追加・同日 見積自動化（積算）章追加・同日 A2A指摘7件反映・同日 v1.4補強4点＋NotebookLM見積データベース章追加）
     </p>
 
     <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:32px; font-size:14px;">主な出典・参考リンク</h3>
@@ -3163,6 +3636,23 @@ button { font-family: inherit; }
       <li><a href="https://www.mlit.go.jp/gobuild/shiryou_sekisan_unnyou.htm" target="_blank" rel="noopener" style="color:#B8E5C5;">国土交通省官庁営繕：公共建築工事積算基準等関連資料</a></li>
       <li><a href="https://www.systems.nakashima.co.jp/dev-case/hiroi/" target="_blank" rel="noopener" style="color:#B8E5C5;">システムズナカシマ：拾い出しシステム開発事例特集</a></li>
       <li><a href="https://sakumiru.jp/column/ai-kensetsu" target="_blank" rel="noopener" style="color:#B8E5C5;">サクミル：建設業AI活用ガイド（AI-OCR・積算AI・導入費用と注意点）</a></li>
+    </ul>
+
+    <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:24px; font-size:14px;">NotebookLM・Workspace活用（v1.4追加）</h3>
+    <ul class="sources-list" style="color:#c8d8cc;">
+      <li><a href="https://support.google.com/notebooklm" target="_blank" rel="noopener" style="color:#B8E5C5;">Google：NotebookLM公式ヘルプ（仕様・上限の一次情報）</a></li>
+      <li><a href="https://shift-ai.co.jp/blog/50110/" target="_blank" rel="noopener" style="color:#B8E5C5;">SHIFT AI TIMES：NotebookLMの制限まとめ（無料・有料の違いと容量対策）</a></li>
+      <li><a href="https://office-masui.com/notebooklm-source-limits/" target="_blank" rel="noopener" style="color:#B8E5C5;">office masui：NotebookLMのソース上限と無料・有料の違い</a></li>
+      <li><a href="https://office-masui.com/notebooklm-free-vs-paid-limits-2026/" target="_blank" rel="noopener" style="color:#B8E5C5;">office masui：2026年版 NotebookLM無料 vs 有料の制限と必要ケース</a></li>
+      <li><a href="https://googleworkspace.tscloud.co.jp/gemini/notebooklm-free-limits" target="_blank" rel="noopener" style="color:#B8E5C5;">TSクラウド：NotebookLM無料版の制限とビジネス導入の注意点</a></li>
+      <li><a href="https://www.matrixflow.net/case-study/156/" target="_blank" rel="noopener" style="color:#B8E5C5;">MatrixFlow：NotebookLM活用術（2026年新機能：Cinematic Video Overviews/Interactive Audio含む）</a></li>
+      <li><a href="https://www.notta.ai/blog/notebooklm-use-cases-20-examples" target="_blank" rel="noopener" style="color:#B8E5C5;">Notta：NotebookLM活用事例20選</a></li>
+      <li><a href="https://www.skillupai.com/blog/ai-knowledge/about-notebooklm/" target="_blank" rel="noopener" style="color:#B8E5C5;">スキルアップAI：NotebookLM主要機能と活用事例</a></li>
+      <li><a href="https://samoyed-tech.com/notebooklm-katsuyou-jirei/" target="_blank" rel="noopener" style="color:#B8E5C5;">サモテク：NotebookLMビジネス活用事例（経理・営業・総務・人事）</a></li>
+      <li><a href="https://cp-agency.co.jp/jidoukanosusume/case_studies/google-sheets-quote-automation-guide/" target="_blank" rel="noopener" style="color:#B8E5C5;">自動化のススメ：Googleスプレッドシートで見積書を自動作成</a></li>
+      <li><a href="https://tori33.com/spreadsheet-estimates-system/" target="_blank" rel="noopener" style="color:#B8E5C5;">りなふら：スプレッドシート見積作成システムの実装例</a></li>
+      <li><a href="https://clarite.co.jp/column/google-sheets-invoice-automation/" target="_blank" rel="noopener" style="color:#B8E5C5;">クラリテ：Googleスプレッドシートで請求書作成を自動化（GAS活用術）</a></li>
+      <li><a href="https://developers.google.com/apps-script/guides/sheets" target="_blank" rel="noopener" style="color:#B8E5C5;">Google for Developers：Apps Script で Google Sheets を拡張する公式ガイド</a></li>
     </ul>
 
     <p class="copy">© 有限会社アートソウル All Rights Reserved.</p>
