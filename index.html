@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント深掘り ＋ 視覚フロー図 v1.2</title>
+<title>建築設計事務所のためのAI活用マップ｜10課題 × 2ツール群 × 3レベル ＋ Claude Codeエージェント ＋ 見積自動化（積算）深掘り v1.3</title>
 <meta name="description" content="職員3名の建築設計事務所が明日から使える、生成AI活用の総まとめ。チャプロ社カタログ60項目を業務フロー10カテゴリに再構造化し、ChatGPT/Google Workspace系とClaude Codeデスクトップそれぞれの実装例、初心者〜外注レベルまで段階的に解説。" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -935,6 +935,99 @@ button { font-family: inherit; }
   line-height: 1.7;
 }
 
+/* ===== Estimate (KENSEKI) Checklist ===== */
+.check-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  margin-top: 20px;
+}
+.check-item {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-top: 3px solid #228B48;
+  border-radius: 6px;
+  padding: 14px 16px;
+  position: relative;
+}
+.check-item.critical {
+  border-top-color: #C53030;
+  background: #FFF8F8;
+}
+.check-item .check-num {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #228B48;
+  font-family: var(--font-en);
+  margin-bottom: 6px;
+}
+.check-item.critical .check-num { color: #C53030; }
+.check-item .check-num::before { content: "✓ "; }
+.check-item h5 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+.check-item p {
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+}
+.check-item.critical h5 { color: #9B2C2C; }
+.critical-banner {
+  background: linear-gradient(135deg, #FFF5F5 0%, #FFEBEB 100%);
+  border-left: 4px solid #C53030;
+  padding: 18px 22px;
+  border-radius: 0 6px 6px 0;
+  margin: 28px 0 20px;
+  font-size: 14.5px;
+  color: #1a1a1a;
+  line-height: 1.8;
+}
+.critical-banner strong { color: #9B2C2C; }
+.kenseki-step-list {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin-top: 20px;
+}
+.kenseki-step {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-left: 4px solid #228B48;
+  border-radius: 6px;
+  padding: 18px 18px 16px;
+}
+.kenseki-step .step-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: #228B48;
+  padding: 3px 10px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  font-family: var(--font-en);
+}
+.kenseki-step h5 {
+  font-size: 14.5px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+.kenseki-step p {
+  font-size: 13px;
+  color: #555;
+  line-height: 1.75;
+  margin: 0;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
   .section { padding: 56px 0; }
@@ -1032,6 +1125,7 @@ button { font-family: inherit; }
       <a href="#quickstart">明日からの3STEP</a>
       <a href="#cases">日本国内の事例</a>
       <a href="#agents">Agentsで深掘り</a>
+      <a href="#kenseki">見積自動化（積算）</a>
       <a href="#faq">FAQ</a>
     </div>
   </div>
@@ -2555,11 +2649,334 @@ button { font-family: inherit; }
   </div>
 </section>
 
-<!-- ===== 08 / FAQ ===== -->
+<!-- ===== 08 / KENSEKI（見積自動化深掘り） ===== -->
+<section class="section agents-section" id="kenseki">
+  <div class="container">
+    <div class="section-head">
+      <span class="section-num">08 / KENSEKI</span>
+      <h2>見積自動化（積算）深掘り — 商業施設・公共工事の見積を Claude Code で半自動化する</h2>
+    </div>
+    <p class="section-lead">
+      商業施設・公共工事の見積業務は、<strong>複数の協力会社・専門工事業者から届く見積（PDF・Excel・FAX・手書き・写真）を束ねて自社の積算書に統合する</strong>仕事。1円の計算ミスが利益を吹き飛ばし、入札では失格になる領域です。本章では、Claude Codeエージェントで見積作成を半自動化する<strong>5つの設計パターン（K1〜K5）</strong>と、避けて通れない<strong>15の計算ミス防止チェック</strong>、公共工事・商業施設特有の論点までを解説します。
+    </p>
+
+    <div class="critical-banner">
+      <strong>本章の最重要原則：</strong>AIに四則演算をさせない。<br>
+      AIに「12,500 × 35.7 = ?」を解かせると、確率的に間違えます。<strong>AIは「読み取り・分類・転記・整合検査」担当、計算はExcel数式・Python・専用システム担当</strong>。この役割分担を守ったときだけ、AI見積自動化は安全に動きます。
+    </div>
+
+    <div class="critical-banner" style="border-left-color:#1A6D39; background:linear-gradient(135deg,#F0F8F2 0%, #E0F0E5 100%);">
+      <strong>SaaS（ミャク楽・AI積算）と Claude Code 自前構築の棲み分け：</strong>競合ではなく組み合わせる。<br>
+      <strong>SaaS の強み：</strong>建材データベース・標準歩掛り・OCR精度が箱で揃う。サブスクで即効・全社導入も早い。<br>
+      <strong>Claude Code 自前の強み：</strong>① 自社固有の積算ルール・属人ノウハウを直接スキル化 ② 機密案件・公共工事の入札資料をローカル処理（社外送信なし） ③ SaaS非対応の工種・特殊建材を補完。<br>
+      → <strong>標準業務の80%をSaaSで時短し、残り20%の特殊・機密領域を Claude Codeでカバー</strong>するハイブリッド構成が現実解。
+    </div>
+
+    <h3>K1〜K5：見積自動化の5パターン</h3>
+    <div class="agents-grid">
+
+      <!-- K1 -->
+      <div class="agent-card">
+        <div class="agent-num">K1 / COLLECT</div>
+        <h4>業者見積の取り込み・統合スキル <code>/mitsumori-collect</code></h4>
+        <div class="agent-core">
+          <strong>核：</strong>協力会社・専門工事業者から届く<strong>形式バラバラの見積（PDF／Excel／写真／手書き）</strong>を、Claude Codeが社内標準フォーマットに変換。AIの仕事は<strong>抽出・分類・転記まで</strong>。計算は触らない。
+        </div>
+        <h5>このスキルで実現できること</h5>
+        <ul>
+          <li>10社から届いた見積PDFをフォルダに入れる → 1コマンドで統合Excelに転記</li>
+          <li>工種コード（建築・電気・設備・外構）の自動分類</li>
+          <li>業者ごとに違う品名表記を「自社標準辞典」で正規化（例：「コンクリート」「RC」「無筋C」→ 統一）</li>
+          <li>抽出した数値1つ1つに <strong>「原本PDFのどこに書かれていたか」のページ番号・位置参照を付与</strong></li>
+          <li>不明・読取不能の項目は「要人手確認」フラグを立てて止める（推測で埋めない）</li>
+        </ul>
+        <h5>実装プロセス</h5>
+        <ol>
+          <li>業者見積のサンプル10枚をClaude Codeに渡し、共通項目を抽出させる</li>
+          <li>「品名・規格・数量・単位・単価・金額・備考」の7列テンプレを確定</li>
+          <li><code>/mitsumori-collect</code> スキルを生成（A1参照）。Excelテンプレに数式を仕込み、AIは値だけ書き込む</li>
+          <li>10案件分テスト → 精度95%超を確認してから運用へ</li>
+        </ol>
+        <h5>参考実装サービス</h5>
+        <ul>
+          <li><strong>ミャク楽</strong>（2026/3公開）：手書き・写真・PDF対応の建設特化AI-OCR。階層構造を維持してNET金額・掛率を自動計算</li>
+          <li><strong>AI-OCR 佐助</strong>：複雑レイアウト・手書きPDF → Excel変換</li>
+          <li>自社開発するなら：Claude Code＋OCRライブラリ（Tesseract/Cloud Vision API等）</li>
+        </ul>
+      </div>
+
+      <!-- K2 -->
+      <div class="agent-card">
+        <div class="agent-num">K2 / CHECK</div>
+        <h4>3視点並列バリデーション <code>@mitsumori-checker</code></h4>
+        <div class="agent-core">
+          <strong>核：</strong>K1で集約した見積データを <strong>3つの独立エージェントで同時検査</strong>。1人で順番に見ていたら見落とす不整合を、並列で炙り出す（A2応用）。
+        </div>
+        <h5>3エージェントの役割分担</h5>
+        <ul>
+          <li><strong>AGENT A：単位整合チェッカー</strong> — ㎡／㎥／m／本／組／式／箇所の混在を検出。「同じ品目で業者A=㎡・業者B=㎥」を警告</li>
+          <li><strong>AGENT B：単価相場チェッカー</strong> — 過去案件と国交省「公共建築工事標準単価積算基準」を照らし、相場から ±X% 超は赤フラグ</li>
+          <li><strong>AGENT C：計算検算チェッカー</strong> — <strong>横計（数量×単価=金額）・縦計（小計の合計）・総額の三方向</strong>を Excel関数で再計算し、表記値とズレたら警告</li>
+        </ul>
+        <h5>運用イメージ</h5>
+        <ol>
+          <li>K1の出力Excelをサブエージェント3体に同時送付</li>
+          <li>各エージェントが独立コンテキストで検査</li>
+          <li>結果を統合 → <strong>「要対応」リストのみが返ってくる</strong>。OK項目は流す</li>
+          <li>代表は不整合だけ確認すればよく、全件目視より<strong>5〜10倍速い</strong></li>
+        </ol>
+      </div>
+
+      <!-- K3 -->
+      <div class="agent-card">
+        <div class="agent-num">K3 / HIROI</div>
+        <h4>数量拾い直し＆突き合わせ <code>/suuryouhiroi-check</code></h4>
+        <div class="agent-core">
+          <strong>核：</strong>設計図書PDFから<strong>自社で数量を独自に拾い直し</strong>、業者見積と突き合わせる。業者の「拾い忘れ」「過剰計上」を機械的に検出する保険。
+        </div>
+        <h5>検出できる典型問題</h5>
+        <ul>
+          <li><strong>拾い忘れ：</strong>業者見積に含まれていない部位（梁・小庇・ピット・捨てコン等）の発見</li>
+          <li><strong>過剰計上：</strong>窓・建具・開口部の差引漏れ（壁面積から開口分を引いていない）</li>
+          <li><strong>仕様違い：</strong>設計図はFc=24なのに見積はFc=21、など強度・等級・厚みのズレ</li>
+          <li><strong>範囲違い：</strong>テナント工事と躯体工事の境界をまたいだ二重計上</li>
+        </ul>
+        <h5>実装パターン（実務優先順）</h5>
+        <ol>
+          <li><strong>CAD/BIMからの直接拾い（最優先）：</strong>Jw_cad・Vectorworks・Revit・ArchiCAD・SXF（電子納品）からの数量取得は<strong>PDF OCRより精度・速度ともに圧倒的に上</strong>。CAD前提の案件はまずこれを検討</li>
+          <li><strong>AI積算SaaS連携：</strong>「AI積算（aisekisan.com）」「KK Generation」「ミャク楽」等の専門サービスから拾い数量を取得</li>
+          <li><strong>自前実装：</strong>CAD/BIM未対応の旧紙図面案件に限り、Claude CodeがPDF図面を読み、部屋・面積・建具を識別 → Excelに数量出力</li>
+          <li>K1の業者見積データと <strong>Excel上で機械的に比較</strong>（VLOOKUP・SUMIFS等）、差分をハイライト</li>
+        </ol>
+      </div>
+
+      <!-- K4 -->
+      <div class="agent-card">
+        <div class="agent-num">K4 / MEMORY</div>
+        <h4>過去案件Memory見積参謀 <code>/mitsumori-rag</code></h4>
+        <div class="agent-core">
+          <strong>核：</strong>過去案件の<strong>成約価格・実行原価・利益率・業者別単価</strong>をMemoryに蓄積。新規案件で「類似案件はこの単価で通った」「B社のほうが3%安い」を即提示。<strong>AIに創作させない＝過去データから引用させる</strong>のがハルシネーション対策の本丸。
+        </div>
+        <h5>蓄積するデータ</h5>
+        <ul>
+          <li><code>memory/案件別実績DB.md</code> — 案件名・延床・工種・成約見積・実行原価・利益率</li>
+          <li><code>memory/業者別単価履歴.md</code> — 業者ごとの工種別単価推移（年単位）</li>
+          <li><code>memory/失敗事例.md</code> — 「あの案件で読み落としたミス」「業者から後出しで上がった項目」</li>
+          <li><code>memory/補助金・公共工事ルール.md</code> — 入札・補助金で通る／通らないの境界線</li>
+        </ul>
+        <h5>NotebookLMで簡易構築する場合</h5>
+        <ol>
+          <li>過去5年の見積書・契約書・実行原価表PDFを50〜100本投入</li>
+          <li>「100㎡規模・商業施設・内装込みの過去案件は？」と日本語で問う</li>
+          <li>該当案件の単価・諸経費率が即時表示される（Claudeに引用範囲を明示させる）</li>
+        </ol>
+        <p style="font-size:12.5px; color:#777; margin-top:8px;">参考：ChatGPTで見積書を作る事例で「30分→5分短縮」報告あり。NotebookLMで過去案件50件投入の運用例（株式会社Lib）</p>
+      </div>
+
+      <!-- K5 -->
+      <div class="agent-card">
+        <div class="agent-num">K5 / FINAL</div>
+        <h4>最終見積書ジェネレータ＋検算フック <code>/mitsumori-final</code></h4>
+        <div class="agent-core">
+          <strong>核：</strong>K1〜K4の結果を <strong>顧客提出用フォーマット</strong>に組み上げる最終段階。各段階で Hooks が自動発火して検算し、出力前に <strong>全項目の二重検算</strong> を強制。
+        </div>
+        <h5>処理フロー</h5>
+        <ul>
+          <li><strong>STEP 1：内訳明細書</strong>（K1+K3を統合）</li>
+          <li><strong>STEP 2：工種別集計</strong>（建築・電気・設備・外構・諸経費）</li>
+          <li><strong>STEP 3：諸経費載せ</strong>（共通仮設費・現場管理費・一般管理費の3層）</li>
+          <li><strong>STEP 4：自社利益率上乗せ</strong>（案件別・施主別ルール）</li>
+          <li><strong>STEP 5：顧客提出フォーマット整形</strong>（公共工事様式／民間様式／英文）</li>
+        </ul>
+        <h5>Hooksで仕込む自動検算</h5>
+        <ol>
+          <li>ファイル保存時 → 縦計・横計・小計の三方向検算スクリプトを自動実行</li>
+          <li>不整合があれば即「⚠ 検算エラー」を画面に表示してロック</li>
+          <li>承認ボタンは代表のみが押せる（権限制御）</li>
+          <li>承認後に <code>提出版_YYYYMMDD_HHmm.xlsx</code> として版管理保存</li>
+        </ol>
+        <p style="font-size:12.5px; color:#777; margin-top:8px;">★ Excelテンプレに <strong>SUMPRODUCT・ROUNDDOWN・IF</strong> 等の数式を最初から仕込んでおき、AIは「値の埋め込み」しかしない設計が安全</p>
+      </div>
+
+    </div>
+
+    <!-- 計算ミス防止15項目 -->
+    <h3 id="kenseki-checklist">計算ミスを起こさない 15 のチェックポイント</h3>
+    <p>★マーク（赤枠）は<strong>絶対に外してはいけない最重要項目</strong>。残り12項目は運用ルール化推奨。</p>
+    <div class="check-grid">
+
+      <div class="check-item critical">
+        <div class="check-num">CRITICAL 01</div>
+        <h5>★ AIに四則演算をさせない</h5>
+        <p>AIは「12,500 × 35.7」を確率的に間違える。<strong>計算は必ずExcel関数・Python・専用システムに渡す</strong>。AIの担当は読み取り・分類・転記・整合検査まで。</p>
+      </div>
+
+      <div class="check-item critical">
+        <div class="check-num">CRITICAL 02</div>
+        <h5>★ 単位を必ず明示・統一</h5>
+        <p>㎡／㎥／m／本／組／式／箇所／kg／t を必ず明記。「自社標準単位辞典」を作って、業者間の表記揺れを正規化。</p>
+      </div>
+
+      <div class="check-item critical">
+        <div class="check-num">CRITICAL 03</div>
+        <h5>★ 原本との位置参照を残す</h5>
+        <p>抽出した数値1つ1つに、PDFの<strong>ページ番号・位置（XY座標）</strong>を付与。「あの数字どこから来た？」が3秒で辿れる状態を作る。</p>
+      </div>
+
+      <div class="check-item critical">
+        <div class="check-num">CRITICAL 04</div>
+        <h5>★ 三方向検算＋歩掛り検算</h5>
+        <p>「数量×単価=金額」「小計の合計=工種計」「工種計の合計=総額」の3方向を Excel関数で再計算してロック。<strong>加えて「労務費＝人工数×職種別単価×歩掛り」</strong>の妥当性も別軸でチェック（労務費の歩掛りズレは現場で初めて顕在化する典型ミス）。</p>
+      </div>
+
+      <div class="check-item critical">
+        <div class="check-num">CRITICAL 05</div>
+        <h5>★ 人間（代表）の最終承認を必修化</h5>
+        <p>どんなに精度が高くても、AIが最終ボタンを押せない設計に。承認権限は代表のみ（CC の <code>allow</code> 機能で権限制御）。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 06</div>
+        <h5>桁チェック（100万 vs 1,000万）</h5>
+        <p>OCR誤読で1桁ズレる致命的事故を防ぐため、「過去同等案件の±50%超は警告」「金額が3桁以上跳ねたら停止」を自動化。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 07</div>
+        <h5>端数処理ルールを明文化</h5>
+        <p>円未満切り捨て／諸経費は1,000円単位／消費税10%（軽減税率は別計算）／合計の千円切捨。<strong>関数（ROUNDDOWN等）を必ず固定</strong>。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 08</div>
+        <h5>同名異義の検出</h5>
+        <p>「コンクリート」「RC」「無筋C」、「鉄筋」「SD295」「異形棒鋼」など、業界用語の表記揺れを辞典で名寄せ。違う品目が同じ名前で書かれる事故を防ぐ。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 09</div>
+        <h5>過去案件からの逸脱検知</h5>
+        <p>K4のMemoryと照合し、「この工種、過去平均より40%高い／低い」を機械的に警告。<strong>異常値の見落としをゼロに</strong>。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 10</div>
+        <h5>複数業者比較で最安値即採用しない</h5>
+        <p>同じ工種に複数業者の見積が来た場合、最安値を機械的に採用すると<strong>品質・工期・後出し追加</strong>のリスク。「最安値だが要警戒」のフラグを残す。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 11</div>
+        <h5>業者からの差替え版を版管理</h5>
+        <p>業者から「修正版です」と再見積が来たら、必ず旧版とdiffを取る。Claude Code＋gitで自動差分管理（AS資産の <code>/doc-compare</code> 流用可能）。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 12</div>
+        <h5>OCR誤読の典型を辞書化</h5>
+        <p>「0」と「O」、「1」と「I」、「,」と「.」、「3」と「8」、「5」と「6」など、OCR誤読しやすい組合せを<strong>事前辞書化</strong>。読取後に再走査。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 13</div>
+        <h5>Excel数式を壊さない貼り付け</h5>
+        <p>AIが値を入れる時、<strong>「値の貼り付け」モードに限定</strong>し、数式セルには直接書き込ませない。テンプレ駆動で「数式エリア／値エリア」を物理分離。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 14</div>
+        <h5>Hooks の無限ループ防止</h5>
+        <p>「保存→検算→修正→保存→…」が無限に回らないよう、Hook内で「最終更新時刻と一致したらスキップ」「再帰深さ上限」を必ず設定。</p>
+      </div>
+
+      <div class="check-item">
+        <div class="check-num">CHECK 15</div>
+        <h5>テンプレ駆動・自由記述させない</h5>
+        <p>毎回違うプロンプトで毎回違う結果が出ると検算できない。<strong>SKILL.mdに固定プロンプト</strong>を書き、入力欄だけが変わる設計に。</p>
+      </div>
+
+    </div>
+
+    <!-- 公共・商業特有 -->
+    <h3 id="kenseki-public">公共工事・商業施設の特有論点</h3>
+    <table class="cat-detail-table">
+      <tr>
+        <th>標準歩掛り・積算基準への適合</th>
+        <td>国土交通省 大臣官房官庁営繕部の <a href="https://www.mlit.go.jp/gobuild/kijun_touitukijyun_s_hyoujyun_bugakari.htm" target="_blank" rel="noopener"><strong>「公共建築工事標準単価積算基準」</strong>（最終改定：令和8年3月11日 国営積第15号）</a>および <a href="https://www.mlit.go.jp/gobuild/shiryou_sekisan_unnyou.htm" target="_blank" rel="noopener">「公共建築工事積算基準」関連資料</a> に準拠した諸経費率・歩掛り計算。<strong>都道府県ごとの上乗せ規定</strong>もK4のMemoryで管理。発注者（国・自治体・独法）別の差を機械的に判別。</td>
+      </tr>
+      <tr>
+        <th>共通仮設費・現場管理費・一般管理費</th>
+        <td>3層構造の諸経費率は工事規模・工種で変動。「直接工事費 → 共通仮設費 → 現場管理費 → 一般管理費」の積み上げを <strong>必ず官公庁基準の率テーブル</strong> と突き合わせ。</td>
+      </tr>
+      <tr>
+        <th>VE（Value Engineering）提案</th>
+        <td>入札時の代替案・コストダウン提案。K4のMemoryから「過去にVE採用された代替工法・採用率」を引き出して提案ドラフト化。</td>
+      </tr>
+      <tr>
+        <th>テナント工事・躯体工事の境界</th>
+        <td>商業施設で頻発する「ここは躯体？ここはテナント？」の二重計上・抜け漏れ。<strong>K3の数量拾い直し</strong>で境界を機械的に判別する設計が有効。</td>
+      </tr>
+      <tr>
+        <th>消費税（軽減税率／免税）</th>
+        <td>原則10%だが、補助金事業・海外取引・一部材料で異なる。<strong>税率は必ず別列で明示</strong>し、合計式は <code>SUMPRODUCT(数量, 単価)*(1+税率)</code> で固定。</td>
+      </tr>
+      <tr>
+        <th>入札・契約書連動</th>
+        <td>公共工事は入札書類との完全一致が必須。AS資産の <code>/contract-check</code> と組み合わせ、見積書と契約書の品名・数量・単価の<strong>機械突き合わせ</strong>を実施。</td>
+      </tr>
+      <tr>
+        <th>追加変更工事（赤伝・設計変更）</th>
+        <td>公共工事で必ず発生する「設計変更による追加・減額」（通称：赤伝）。<strong>当初契約 vs 変更後の差分を Claude Code で機械抽出</strong>し、変更協議書のドラフトまで自動化。AS資産の <code>/doc-compare</code> 流用可能。</td>
+      </tr>
+      <tr>
+        <th>下請法・建設業法</th>
+        <td>下請業者への支払サイト・書面交付・割引手形等の規制を遵守。K4の業者別履歴で <strong>支払期日違反・歩掛り低すぎ等の警告</strong>を機械化。下請契約書のレビューもAS資産 <code>/contract-check</code> で対応。</td>
+      </tr>
+      <tr>
+        <th>インボイス制度（適格請求書）</th>
+        <td>2023年10月開始。免税業者からの仕入は仕入税額控除が段階的に削減（〜2029年）。<strong>業者ごとの登録番号有無を K4のMemoryで管理</strong>し、見積取得時に税額計算ロジックを切り分け。</td>
+      </tr>
+    </table>
+
+    <!-- 段階導入ロードマップ -->
+    <h3 id="kenseki-roadmap">見積自動化の段階導入ロードマップ</h3>
+    <p>「いきなり全自動」は致命的。<strong>K1（取り込み）から1案件で試行</strong>し、段階的に拡張する。</p>
+    <div class="kenseki-step-list">
+      <div class="kenseki-step">
+        <span class="step-tag">PHASE 1 / 1週間</span>
+        <h5>K1で1案件試行</h5>
+        <p>業者見積の取り込み・統合のみ。Excelの数式部分は最初から仕込み、AIは値の埋め込みのみ。精度95%超を確認。</p>
+      </div>
+      <div class="kenseki-step">
+        <span class="step-tag">PHASE 2 / 1ヶ月</span>
+        <h5>K2で並列バリデーション導入</h5>
+        <p>単位・単価相場・計算検算の3エージェント並列。代表は不整合のみ確認する運用に。</p>
+      </div>
+      <div class="kenseki-step">
+        <span class="step-tag">PHASE 3 / 2ヶ月</span>
+        <h5>K4のMemory基盤構築</h5>
+        <p>過去5年分の案件・業者単価・失敗事例を蓄積。NotebookLMから着手し、慣れたらClaude Codeのmemoryへ移行。</p>
+      </div>
+      <div class="kenseki-step">
+        <span class="step-tag">PHASE 4 / 3〜6ヶ月</span>
+        <h5>K3＋K5で本格運用</h5>
+        <p>数量拾い直しと最終ジェネレータ。公共工事の標準歩掛り適合・諸経費3層・VE提案を含む完全な見積パイプライン。</p>
+      </div>
+    </div>
+
+    <p style="margin-top:28px; font-size:14px; color:#555;">
+      ※ 標準的な見積1件あたり、PHASE 1 完了で <strong>30〜50%の時短</strong>、PHASE 4 完了で <strong>70〜80%の時短</strong>が目安（業者数・案件規模による）。<br>
+      ※ ただし<strong>計算ミスをゼロにする</strong>のが目的であり、時短は副次的成果。「速いが間違える」より「正確で半自動」を最優先する設計です。<br>
+      ※ <strong>代替パス：</strong>「K4 → K1 → K2 → K3 → K5」の順序も有効。過去案件Memory（K4）を先行構築すれば、K1〜K2の検算精度が一気に上がる。ベテラン主導・過去蓄積豊富な事務所に向く。
+    </p>
+  </div>
+</section>
+
+<!-- ===== 09 / FAQ ===== -->
 <section class="section alt-bg" id="faq">
   <div class="container">
     <div class="section-head">
-      <span class="section-num">08 / FAQ</span>
+      <span class="section-num">09 / FAQ</span>
       <h2>よくある質問</h2>
     </div>
 
@@ -2693,7 +3110,7 @@ button { font-family: inherit; }
     <p>
       担当：上村桂右<br>
       Mail：uemura@artsoul.jp<br>
-      本資料：建築設計事務所のためのAI活用マップ v1.2（2026-06-03 作成・同日 Claude Codeエージェント章追加・同日 初心者向けSVGフロー図5本追加）
+      本資料：建築設計事務所のためのAI活用マップ v1.3（2026-06-03 作成・同日 Claude Codeエージェント章追加・同日 初心者向けSVGフロー図5本追加・同日 見積自動化（積算）章を追加・同日 A2Aレビュー指摘 7件全件反映）
     </p>
 
     <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:32px; font-size:14px;">主な出典・参考リンク</h3>
@@ -2729,6 +3146,23 @@ button { font-family: inherit; }
       <li><a href="https://www.mign.io/owned-media/54962/" target="_blank" rel="noopener" style="color:#B8E5C5;">mign：建築業界でAI活用の最新法</a></li>
       <li><a href="https://n1-inc.co.jp/kenchiku-ai/" target="_blank" rel="noopener" style="color:#B8E5C5;">N1：建築業界における生成AI活用事例15選</a></li>
       <li><a href="https://note.com/sherpa888/n/nb5449b553c0f" target="_blank" rel="noopener" style="color:#B8E5C5;">株式会社シェルパ：生成AIを活用した建築パースの可能性</a></li>
+    </ul>
+
+    <h3 style="color:#fff; border-left:3px solid #B8E5C5; margin-top:24px; font-size:14px;">見積自動化・建築積算（v1.3追加）</h3>
+    <ul class="sources-list" style="color:#c8d8cc;">
+      <li><a href="https://service.myakuraku.ai/" target="_blank" rel="noopener" style="color:#B8E5C5;">ミャク楽：建設業特化AI-OCRサービス（2026年3月公開）</a></li>
+      <li><a href="https://www.aisekisan.com/" target="_blank" rel="noopener" style="color:#B8E5C5;">AI積算：PDF平面図から自動拾い・自動積算（材料認識99%・配管95%）</a></li>
+      <li><a href="https://advan-jpn.co.jp/products/aiocr-sasuke/" target="_blank" rel="noopener" style="color:#B8E5C5;">AI-OCR佐助：PDFをExcelに自動変換・手書き対応</a></li>
+      <li><a href="https://advan-jpn.co.jp/column/quotation-ocr/" target="_blank" rel="noopener" style="color:#B8E5C5;">アドバン：見積書OCR活用の自動化のコツと注意点</a></li>
+      <li><a href="https://ken-it.world/it/2025/07/ai-takes-off-paper.html" target="_blank" rel="noopener" style="color:#B8E5C5;">建設ITブログ：KK Generation 紙図面からの自動積算</a></li>
+      <li><a href="https://magazine.algomatic.jp/automation-estimate-creation-with-generative-ai-ocr-and-rag-integration" target="_blank" rel="noopener" style="color:#B8E5C5;">AlgoMagazine：生成AIを活用した見積書作成の自動化（OCR×LLM×RAG）</a></li>
+      <li><a href="https://lib-inc.co.jp/chatgpt-estimate-creation/" target="_blank" rel="noopener" style="color:#B8E5C5;">株式会社Lib：ChatGPTで見積書を作る方法（30分→5分）</a></li>
+      <li><a href="https://kurashi-kenchiku.com/dx/265/" target="_blank" rel="noopener" style="color:#B8E5C5;">くらし建築百科 Biz：ChatGPTで見積書・お知らせ文を自動作成（工務店向け）</a></li>
+      <li><a href="https://weel.co.jp/media/genai-estimate/" target="_blank" rel="noopener" style="color:#B8E5C5;">WEEL：生成AIで見積作成の効率化＆脱属人化の4ステップ</a></li>
+      <li><a href="https://www.mlit.go.jp/gobuild/kijun_touitukijyun_s_hyoujyun_bugakari.htm" target="_blank" rel="noopener" style="color:#B8E5C5;">国土交通省官庁営繕：公共建築工事標準単価積算基準（最終改定 令和8年3月）</a></li>
+      <li><a href="https://www.mlit.go.jp/gobuild/shiryou_sekisan_unnyou.htm" target="_blank" rel="noopener" style="color:#B8E5C5;">国土交通省官庁営繕：公共建築工事積算基準等関連資料</a></li>
+      <li><a href="https://www.systems.nakashima.co.jp/dev-case/hiroi/" target="_blank" rel="noopener" style="color:#B8E5C5;">システムズナカシマ：拾い出しシステム開発事例特集</a></li>
+      <li><a href="https://sakumiru.jp/column/ai-kensetsu" target="_blank" rel="noopener" style="color:#B8E5C5;">サクミル：建設業AI活用ガイド（AI-OCR・積算AI・導入費用と注意点）</a></li>
     </ul>
 
     <p class="copy">© 有限会社アートソウル All Rights Reserved.</p>
